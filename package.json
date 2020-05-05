@@ -1,0 +1,28 @@
+{
+  "name": "polaris-ado",
+  "version": "1.0.0",
+  "description": "Polaris for Azure DevOps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tfx extension create --manifest-globs vss-extension.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synopsys-sig/polaris-ado.git"
+  },
+  "keywords": [
+    "polaris",
+    "ado",
+    "azure"
+  ],
+  "author": "Synopsys",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/synopsys-sig/polaris-ado/issues"
+  },
+  "homepage": "https://github.com/synopsys-sig/polaris-ado#readme",
+  "dependencies": {
+    "vss-web-extension-sdk": "^5.141.0"
+  }
+}
