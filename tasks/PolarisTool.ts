@@ -120,14 +120,14 @@ function setGoEnvironmentVariables(goRoot: string) {
 // which have patch number as well.
 function fixVersion(version: string): string {
     let versionPart = version.split(".");
-    if(versionPart[1] == null) {
+    if (versionPart[1] == null) {
         //append minor and patch version if not available
         return version.concat(".0.0");
     }
-    else if(versionPart[2] == null) {
+    else if (versionPart[2] == null) {
         //append patch version if not available
         return version.concat(".0");
-    } 
+    }
     return version;
 }
 

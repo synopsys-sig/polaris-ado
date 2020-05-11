@@ -20,7 +20,7 @@ const log = winston.createLogger({
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.simple()
-              )
+            )
         })
     ],
 });
@@ -35,6 +35,7 @@ function determineRelativeDownloadUrl(client: string) {
         return "/api/tools/" + client + "_cli-linux64.zip";
     }
 }
+
 function determineExecutable(client: string) {
     var platform = os.platform();
     if (platform == "win32") {
@@ -50,7 +51,7 @@ function determineDownloadUrl(server: string, client: string) {
 
 async function retreiveModifiedHeader(url: string) {
     var token = CancelToken.source();
-    
+
     return new Promise((resolve, reject) => {
         axios({
             url: url,
@@ -72,20 +73,20 @@ async function retreiveModifiedHeader(url: string) {
 
 async function downloadCli(url: string, file: string) {
     const writer = fs.createWriteStream(file)
-  
+
     const response = await axios({
-      url,
-      method: 'GET',
-      responseType: 'stream'
+        url,
+        method: 'GET',
+        responseType: 'stream'
     })
-  
+
     response.data.pipe(writer)
-  
+
     return new Promise((resolve, reject) => {
-      writer.on('finish', resolve);
-      writer.on('error', reject)
+        writer.on('finish', resolve);
+        writer.on('error', reject)
     })
-  }
+}
 
 async function extractCli(sourceZip: string, targetPath: string) {
     var zip = new zipper(sourceZip);
@@ -99,7 +100,6 @@ async function run() {
 
     }
 
-
     var url = determineDownloadUrl("https://dev01.dev.polaris.synopsys.com", "polaris");
     log.debug("Using polaris url: " + url);
     var date: any = await retreiveModifiedHeader(url);
@@ -111,12 +111,12 @@ async function run() {
         const zip = path.resolve(__dirname, "polaris.zip");
         await downloadCli(url, zip);
         log.debug("Downloaded polaris zip: " + zip);
-        await extractCli(zip,  target);
+        await extractCli(zip, target);
         log.debug("Extracted polaris: " + target);
     } else {
         log.debug("Latest polaris, will not download.");
     }
-    
+
     log.debug("Finding polaris executable.");
     var polarisInternalFolders = fs.readdirSync(target);
     var polarisFolder = path.join(target, polarisInternalFolders[0]);
