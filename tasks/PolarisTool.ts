@@ -9,8 +9,13 @@ let osArch: string = os.arch();
 
 async function run() {
     try {
-        let version = tl.getInput('version', true).trim();
-        await getGo(version);
+        let versionInput = tl.getInput('version', true);
+        if (versionInput == undefined) {
+
+        } else {
+            let version = versionInput.trim();
+            await getGo(version);
+        }
     }
     catch (error) {
         tl.setResult(tl.TaskResult.Failed, error);
@@ -44,7 +49,7 @@ async function acquireGo(version: string): Promise<string> {
     //
     let fileName: string = getFileName(version);
     let downloadUrl: string = getDownloadUrl(fileName);
-    let downloadPath: string = null;
+    let downloadPath: string | null = null;
     try {
         downloadPath = await toolLib.downloadTool(downloadUrl);
     } catch (error) {
@@ -62,7 +67,7 @@ async function acquireGo(version: string): Promise<string> {
     //
     // Extract
     //
-    let extPath: string;
+    let extPath: string | undefined;
     extPath = tl.getVariable('Agent.TempDirectory');
     if (!extPath) {
         throw new Error("Expected Agent.TempDirectory to be set");
@@ -98,8 +103,8 @@ function getDownloadUrl(filename: string): string {
 function setGoEnvironmentVariables(goRoot: string) {
     tl.setVariable('GOROOT', goRoot);
 
-    let goPath: string = tl.getInput("goPath", false);
-    let goBin: string = tl.getInput("goBin", false);
+    let goPath: string | undefined = tl.getInput("goPath", false);
+    let goBin: string | undefined = tl.getInput("goBin", false);
 
     // set GOPATH and GOBIN as user value
     if (!util.isNullOrUndefined(goPath)) {
