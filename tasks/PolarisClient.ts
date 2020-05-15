@@ -32,6 +32,7 @@ export default class PolarisClient {
     }
 
     async authenticate() {
+        this.log.info("Authenticating with polaris.")
         this.bearer_token = await this.fetch_bearer_token();
         this.headers = {
             Authorization: `Bearer ${this.bearer_token}`
@@ -48,12 +49,19 @@ export default class PolarisClient {
         var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
         var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + "bqqv8a3ad15nb8q5l1vs2riv2i6lt29artb8nggbj9leao07aigg"
         var authResponse = await axios.post(authenticateUrl);
-        return authResponse.data.jwt;
+        if (authResponse.data.jwt) {
+            this.log.info("Succesfully authenticated, saving bearer token.")
+            return authResponse.data.jwt;
+        } else {
+            this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
+            throw new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`)
+        }
     }
 
     async fetch_cli_modified_date(url: string): Promise<any> { //return type should be a moment
         var token = CancelToken.source();
         var self = this;
+        self.log.debug("Fetching cli modified date from: " + url);
         return new Promise((resolve, reject) => {
             axios({
                 url: url,
@@ -80,6 +88,9 @@ export default class PolarisClient {
     }
     
     async download_cli(url: string, file: string) {
+        this.log.debug("Downloading cli from: " + url);
+        this.log.debug("Downloading cli to: " + file);
+
         const writer = fs.createWriteStream(file);
     
         const response = await axios({

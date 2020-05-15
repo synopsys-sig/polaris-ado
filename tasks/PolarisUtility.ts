@@ -67,10 +67,11 @@ export default class PolarisUtility {
     
         let go: tr.ToolRunner = tl.tool(cliPath);
         go.arg("analyze");
+        go.arg("-w");
         //go.arg(this.command);
         //go.line(this.argument);
     
-        var return_code = await go.exec(<tr.IExecOptions>{
+        var return_code =  await go.exec(<tr.IExecOptions>{
             cwd: cwd,
             env: env
         });
