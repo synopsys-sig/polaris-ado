@@ -57,7 +57,7 @@ export default class PolarisUtility {
         await zip.extractAllTo(targetPath, /*overwrite*/ true);
     }
 
-    async execute_cli(cliPath: string, cwd: string, url: string, token: string):Promise<PolarisCliResult> {
+    async execute_cli(cliPath: string, cwd: string, url: string, token: string, build_command: string):Promise<PolarisCliResult> {
         var env: {
             [key: string]: string;
         } = {
@@ -68,8 +68,7 @@ export default class PolarisUtility {
         let go: tr.ToolRunner = tl.tool(cliPath);
         go.arg("analyze");
         go.arg("-w");
-        //go.arg(this.command);
-        //go.line(this.argument);
+        go.line(build_command);
     
         var return_code =  await go.exec(<tr.IExecOptions>{
             cwd: cwd,

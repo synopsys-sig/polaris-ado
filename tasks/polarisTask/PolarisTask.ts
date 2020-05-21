@@ -27,19 +27,9 @@ const log = winston.createLogger({
     ],
 });
 
-
-var lastDownloaded = moment("2020-05-08T17:19:00-04:00");
-
-async function perform() {
+async function execute(polaris_url: string, polaris_token:string, polaris_target:string, polaris_client: PolarisClient, build_command: string): Promise<String> {
     log.info("Starting polaris task.")
-    var polaris_url = "https://dev01.dev.polaris.synopsys.com";
-    var polaris_target = "C:\\Users\\jordanp\\Downloads\\joda-time-master";
-    var polaris_token = "bqqv8a3ad15nb8q5l1vs2riv2i6lt29artb8nggbj9leao07aigg"
     var polaris_cli_name = "polaris"; // used to be "swip"
-
-    var polaris_client = new PolarisClient(log, polaris_url, polaris_token);
-    await polaris_client.authenticate();
-
     var polaris_utility = new PolarisUtility(log);
 
     var polaris_cli_location = path.resolve(__dirname, "polaris");
@@ -83,11 +73,16 @@ async function perform() {
     var polaris_exe = await polaris_utility.find_executable(polaris_cli_location, polaris_cli_name);
     log.info("Found executable: " + polaris_exe)
 
-    var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token);
+    var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token, build_command);
 
     log.info("Polaris exit code: " + polaris_result.returnCode)
     log.info("Reading scan result: " + polaris_result.scanCliJsonPath)
-    var scan_json_text = fs.readFileSync(polaris_result.scanCliJsonPath);
+    
+    return polaris_result.scanCliJsonPath;
+}
+
+async function wait_for_issues(scan_cli_json_path: String, polaris_client: PolarisClient) {
+    var scan_json_text = fs.readFileSync(scan_cli_json_path);
     var scan_json = JSON.parse(scan_json_text);
 
     var issue_counts = json_path.query(scan_json, "$.issueSummary.total");
@@ -121,10 +116,49 @@ async function perform() {
             tl.setResult(tl.TaskResult.Failed, `Polaris found ${total_count} total issues.`);
         }
     } else {
-        log.info("Will not check for issues.")
+        log.info("Did not find any issue counts.")
     }
-    
-    log.info("Finished polaris task.");
 }
 
-perform()
+async function run() {
+    try {
+        log.info("Polaris task started.");
+
+        var polarisServiceId = "polarisService";
+        var polarisService = tl.getInput(polarisServiceId, /* required: */ true)!
+        var polaris_url: string = tl.getEndpointUrl(polarisService, /* optional: */ false);
+        const polaris_token: string = tl.getEndpointAuthorizationParameter(polarisService, 'apiToken', /* optional: */ false)!
+
+        const build_command = tl.getInput('polarisCommand', /* required: */ true)!;
+        const should_wait_for_issues = tl.getBoolInput('waitForIssues', /* required: */ true)!;
+
+        if (polaris_url.endsWith("/") || polaris_url.endsWith("\\")) {
+            polaris_url = polaris_url.slice(0, -1);
+        }
+
+        log.debug(`Read task configuration: ${polaris_url} @ ${polaris_token}`);
+        
+        var polaris_client = new PolarisClient(log, polaris_url, polaris_token);
+        await polaris_client.authenticate();
+
+        log.debug("Authenticated with polaris.");
+
+        var target = tl.cwd();
+        var scan_cli_json_path = await execute(polaris_url, polaris_token, target, polaris_client, build_command);
+
+        log.debug("Executed polaris.");
+
+        if (should_wait_for_issues) {
+            log.info("Checking for issues.")
+            await wait_for_issues(scan_cli_json_path, polaris_client);
+        } else {
+            log.info("Will not check for issues.")
+        }
+
+        log.info("Task completed.")
+    } catch (e) {
+        tl.setResult(tl.TaskResult.Failed, `An unexpected error occured:${e}`);
+    }
+}
+
+run()

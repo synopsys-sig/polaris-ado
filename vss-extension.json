@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "synopsys-polaris",
-    "version": "1.0.0",
+    "version": "1.0.12",
     "name": "Synopsys Polaris",
     "publisher": "synopsys-polaris",
     "public": true,
@@ -35,16 +35,11 @@
     },
     "files": [
       {
-        "path": "tasks/synopsys-polaris-task"
+        "path": "tasks/polarisTask"
       },
       {
         "path": "images",
         "addressable": true
-      },
-      {
-        "path": "node_modules/vss-web-extension-sdk/lib",
-        "addressable": true,
-        "packagePath": "lib"
       }
     ],
     "content": {
@@ -54,25 +49,25 @@
     },
     "contributions": [
       {
-        "id": "synopsys-detect-task",
+        "id": "synopsys-polaris-task",
         "type": "ms.vss-distributed-task.task",
         "targets": [
           "ms.vss-distributed-task.tasks"
         ],
         "properties": {
-          "name": "tasks/synopsys-detect-task"
+          "name": "tasks/polarisTask"
         }
       },
       {
-        "id": "synopsys-polaris-proxy-endpoint",
+        "id": "synopsys-polaris-server-proxy-endpoint",
         "description": "Proxy Service Endpoint for Polaris connections",
         "type": "ms.vss-endpoint.service-endpoint-type",
         "targets": [
           "ms.vss-endpoint.endpoint-types"
         ],
         "properties": {
-          "name": "synopsys-polaris-proxy",
-          "displayName": "Polaris Proxy",
+          "name": "polarisServerProxy",
+          "displayName": "Polaris Server Proxy",
           "url": {
             "displayName": "Server URL",
             "helpText": "Provide the URL for your proxy - please include the port if other than 80 (http) or 443 (https)"
@@ -108,15 +103,15 @@
         }
       },
       {
-        "id": "synopsys-polaris-endpoint",
+        "id": "synopsys-polaris-server-endpoint",
         "description": "Service Endpoint for Polaris connections",
         "type": "ms.vss-endpoint.service-endpoint-type",
         "targets": [
           "ms.vss-endpoint.endpoint-types"
         ],
         "properties": {
-          "name": "synopsys-polaris",
-          "displayName": "Polaris",
+          "name": "polarisServer",
+          "displayName": "Polaris Server",
           "url": {
             "displayName": "Server URL",
             "helpText": "Provide the URL for Polaris - please include the port if other than 80 (http) or 443 (https)"
