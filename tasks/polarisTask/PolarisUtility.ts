@@ -65,9 +65,7 @@ export default class PolarisUtility {
             POLARIS_ACCESS_TOKEN: token
         }
     
-        let go: tr.ToolRunner = tl.tool(cliPath);
-        go.arg("analyze");
-        go.arg("-w");
+        let go = tl.tool(cliPath);
         go.line(build_command);
     
         var return_code =  await go.exec(<tr.IExecOptions>{

@@ -36,7 +36,7 @@ export default class PolarisJobService {
                 running = false;
             } else {
                 this.log.info("Waiting 2 seconds for job to complete.");
-                sleep(2000);    
+                await sleep(2000);    
             }
         }
     }

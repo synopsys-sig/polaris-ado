@@ -23,13 +23,11 @@ async function run() {
     try {
         log.info("Polaris task started.");
 
-        var polarisServiceId = "polarisService";
-        var polarisService = tl.getInput(polarisServiceId, /* required: */ true)!
-        var polaris_url: string = tl.getEndpointUrl(polarisService, /* optional: */ false);
-        const polaris_token: string = tl.getEndpointAuthorizationParameter(polarisService, 'apiToken', /* optional: */ false)!
-
-        const build_command = tl.getInput('polarisCommand', /* required: */ true)!;
-        const should_wait_for_issues = tl.getBoolInput('waitForIssues', /* required: */ true)!;
+        var polaris_url = "https://dev01.dev.polaris.synopsys.com";
+        var polaris_target = "C:\\Users\\jordanp\\Downloads\\joda-time-master";
+        var polaris_token = "bqqv8a3ad15nb8q5l1vs2riv2i6lt29artb8nggbj9leao07aigg"
+        var build_command = "analyze";
+        const should_wait_for_issues = true;
 
         if (polaris_url.endsWith("/") || polaris_url.endsWith("\\")) {
             polaris_url = polaris_url.slice(0, -1);
