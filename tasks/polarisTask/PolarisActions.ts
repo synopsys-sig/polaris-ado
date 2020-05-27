@@ -35,18 +35,15 @@ export default class PolarisActions {
         this.log.debug("Checking for version file: " + version_file)
     
         var download_cli = false;
+        var available_version_date = await polaris_client.fetch_cli_modified_date(cli_url);
         if (fs.existsSync(version_file)) {
             this.log.debug("Version file exists.")
-            var current_version_date = moment(fs.readFileSync(version_file));
-            var available_version_date = await polaris_client.fetch_cli_modified_date(cli_url);
+            var current_version_date = moment(fs.readFileSync(version_file, { encoding: 'utf8' }));
             this.log.debug("Current version: " + current_version_date.format())
             this.log.debug("Available version: " + available_version_date.format())
             if (current_version_date.isBefore(available_version_date)) {
                 this.log.info("Downloading Polaris CLI because a newer version is available.")
                 download_cli = true;
-                this.log.info(`Cleaning up the Polaris installation directory: ${polaris_cli_location}`);
-                this.log.info("Please do not place anything in this folder, it is under extension control.");
-                fse.removeSync(polaris_cli_location);
             } else {
                 this.log.info("Existing Polaris CLI will be used.")
             }
@@ -56,14 +53,21 @@ export default class PolarisActions {
         }
     
         if (download_cli) {
+            if (fs.existsSync(polaris_cli_location)) {
+                this.log.info(`Cleaning up the Polaris installation directory: ${polaris_cli_location}`);
+                this.log.info("Please do not place anything in this folder, it is under extension control.");
+                fse.removeSync(polaris_cli_location);    
+            }
+
             this.log.info("Starting download.")
             const polaris_zip = path.join(polaris_install_path, "polaris.zip");
             await polaris_client.download_cli(cli_url, polaris_zip);
             this.log.info("Starting extraction.")
             await polaris_utility.extract_cli(polaris_zip,  polaris_cli_location);
             this.log.info("Download and extraction finished.")
-            fs.writeFileSync(version_file, available_version_date.format());
-            this.log.info(`Wrote version file: ${version_file}`)
+            fse.ensureFileSync(version_file);
+            fs.writeFileSync(version_file, available_version_date.format(), 'utf8');
+            this.log.info(`Wrote version file: ${version_file}`)    
         }
         
         this.log.info("Looking for Polaris executable.")
