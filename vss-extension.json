@@ -1,7 +1,7 @@
 {
     "manifestVersion": 1,
     "id": "synopsys-polaris",
-    "version": "1.0.13",
+    "version": "1.0.14",
     "name": "Synopsys Polaris",
     "publisher": "synopsys-polaris",
     "public": true,
