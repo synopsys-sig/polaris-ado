@@ -43,7 +43,7 @@ async function run() {
         var polaris_actions = new PolarisActions(log, tl);
 
         var target = tl.cwd();
-        var scan_cli_json_path = await polaris_actions.execute(polaris_url, polaris_token, target, polaris_client, build_command);
+        var scan_cli_json_path = await polaris_actions.execute(polaris_url, polaris_token, target, target, polaris_client, build_command);
 
         log.debug("Executed polaris.");
 
