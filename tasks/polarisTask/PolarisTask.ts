@@ -22,19 +22,19 @@ async function run() {
     try {
         log.info("Polaris task started.");
 
-        var polarisServiceId = "polarisService";
-        var polarisService = tl.getInput(polarisServiceId, /* required: */ true)!
-        var polaris_url: string = tl.getEndpointUrl(polarisService, /* optional: */ false);
-        const polaris_token: string = tl.getEndpointAuthorizationParameter(polarisService, 'apiToken', /* optional: */ false)!
+        var polaris_service_id = "polarisService";
+        var polaris_service = tl.getInput(polaris_service_id, /* required: */ true)!
+        var polaris_url: string = tl.getEndpointUrl(polaris_service, /* optional: */ false);
+        const polaris_token: string = tl.getEndpointAuthorizationParameter(polaris_service, 'apiToken', /* optional: */ false)!
 
-        var polarisProxyInfo: PolarisProxyInfo | undefined = undefined;
-        var polarisProxyId = "polarisProxyService";
-        var polarisProxyService = tl.getInput(polarisProxyId, /* required: */ false)
-        if (polarisProxyService) {
-            var proxy_url: string = tl.getEndpointUrl(polarisProxyService, /* optional: */ true);
-            const proxyUsername: string | undefined = tl.getEndpointAuthorizationParameter(polarisProxyService, 'username', /* optional: */ true)
-            const proxyPassword: string | undefined = tl.getEndpointAuthorizationParameter(polarisProxyService, 'password', /* optional: */ true)   
-            polarisProxyInfo = new PolarisProxyInfo(proxy_url, proxyUsername, proxyPassword);
+        var polaris_proxy_info: PolarisProxyInfo | undefined = undefined;
+        var polaris_proxy_id = "polarisProxyService";
+        var polaris_proxy_service = tl.getInput(polaris_proxy_id, /* required: */ false)
+        if (polaris_proxy_service) {
+            var proxy_url: string = tl.getEndpointUrl(polaris_proxy_service, /* optional: */ true);
+            const proxy_username: string | undefined = tl.getEndpointAuthorizationParameter(polaris_proxy_service, 'username', /* optional: */ true)
+            const proxy_password: string | undefined = tl.getEndpointAuthorizationParameter(polaris_proxy_service, 'password', /* optional: */ true)   
+            polaris_proxy_info = new PolarisProxyInfo(proxy_url, proxy_username, proxy_password);
         }
 
 
@@ -56,7 +56,7 @@ async function run() {
 
         log.info(`Installing polaris to directory: ` + polaris_install_path);
 
-        var polaris_client = new PolarisClient(log, polaris_url, polaris_token, polarisProxyInfo);
+        var polaris_client = new PolarisClient(log, polaris_url, polaris_token, polaris_proxy_info);
         await polaris_client.authenticate();
 
         log.debug("Authenticated with polaris.");
