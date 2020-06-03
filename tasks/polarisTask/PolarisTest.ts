@@ -35,7 +35,7 @@ async function run() {
 
         log.debug(`Read task configuration: ${polaris_url} @ ${polaris_token}`);
         
-        var polaris_client = new PolarisClient(log, polaris_url, polaris_token);
+        var polaris_client = new PolarisClient(log, polaris_url, polaris_token, undefined);
         await polaris_client.authenticate();
 
         log.debug("Authenticated with polaris.");
@@ -60,4 +60,9 @@ async function run() {
     }
 }
 
-run()
+try {
+    run()
+} catch(e){
+    console.log(e);
+}
+

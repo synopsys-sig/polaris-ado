@@ -1,12 +1,11 @@
 # polaris-ado
 Polaris for Azure DevOps.
 
-Build with:
-npm run build
-npm run test
+Install npm modules: npm install
+Copy npm modules into task folder: cp node_modules tasks/polarisTask/node_modules
 
-tfx extension create --manifest-globs vss-extension.json
-cd coverityTask && powershell ./compile_and_test.ps1 && cd ..
+Build with: npm run build
+Test with: npm run test
 
 For a new version, change the task:
 task.json, version: major/minor/patch

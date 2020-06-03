@@ -1,11 +1,10 @@
 
 import * as os from 'os';
 const winston = require("winston");
-import PolarisClient from "./PolarisClient"
+import { default as PolarisClient, PolarisProxyInfo } from "./PolarisClient"
 import PolarisActions from "./PolarisActions"
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
-
 
 const log = winston.createLogger({
     level: "debug",
@@ -28,6 +27,17 @@ async function run() {
         var polaris_url: string = tl.getEndpointUrl(polarisService, /* optional: */ false);
         const polaris_token: string = tl.getEndpointAuthorizationParameter(polarisService, 'apiToken', /* optional: */ false)!
 
+        var polarisProxyInfo: PolarisProxyInfo | undefined = undefined;
+        var polarisProxyId = "polarisProxyService";
+        var polarisProxyService = tl.getInput(polarisProxyId, /* required: */ false)
+        if (polarisProxyService) {
+            var proxy_url: string = tl.getEndpointUrl(polarisProxyService, /* optional: */ true);
+            const proxyUsername: string | undefined = tl.getEndpointAuthorizationParameter(polarisProxyService, 'username', /* optional: */ true)
+            const proxyPassword: string | undefined = tl.getEndpointAuthorizationParameter(polarisProxyService, 'password', /* optional: */ true)   
+            polarisProxyInfo = new PolarisProxyInfo(proxy_url, proxyUsername, proxyPassword);
+        }
+
+
         const build_command = tl.getInput('polarisCommand', /* required: */ true)!;
         const should_wait_for_issues = tl.getBoolInput('waitForIssues', /* required: */ true)!;
 
@@ -44,9 +54,9 @@ async function run() {
             polaris_install_path = tl.cwd();
         }
 
-        log.into(`Installing polaris to directory: ` + polaris_install_path);
+        log.info(`Installing polaris to directory: ` + polaris_install_path);
 
-        var polaris_client = new PolarisClient(log, polaris_url, polaris_token);
+        var polaris_client = new PolarisClient(log, polaris_url, polaris_token, polarisProxyInfo);
         await polaris_client.authenticate();
 
         log.debug("Authenticated with polaris.");
