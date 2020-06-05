@@ -84,7 +84,7 @@ export default class PolarisClient {
     async fetch_bearer_token() {
         var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
         var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + "bqqv8a3ad15nb8q5l1vs2riv2i6lt29artb8nggbj9leao07aigg"
-        var authResponse = await axios.post(authenticateUrl, this.proxy_config);
+        var authResponse = await axios.post(authenticateUrl, null, this.proxy_config);
         if (authResponse.data.jwt) {
             this.log.info("Succesfully authenticated, saving bearer token.")
             return authResponse.data.jwt;
