@@ -3,8 +3,10 @@ import * as os from 'os';
 const winston = require("winston");
 import { default as PolarisClient, PolarisProxyInfo } from "./PolarisClient"
 import PolarisActions from "./PolarisActions"
+import PhoneHomeClient from "./PhoneHomeClient"
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
+var task = require("./task.json")
 
 const log = winston.createLogger({
     level: "debug",
@@ -60,6 +62,9 @@ async function run() {
         await polaris_client.authenticate();
 
         log.debug("Authenticated with polaris.");
+        
+        const client = PhoneHomeClient.CreateClient(log);
+        await client.phone_home(polaris_url, PhoneHomeClient.FindTaskVersion(), "");
 
         var polaris_actions = new PolarisActions(log, tl);
 

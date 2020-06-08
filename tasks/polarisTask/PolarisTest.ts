@@ -3,6 +3,7 @@ import * as os from 'os';
 const winston = require("winston");
 import PolarisClient from "./PolarisClient"
 import PolarisActions from "./PolarisActions"
+import PhoneHomeClient from "./PhoneHomeClient"
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 
@@ -39,6 +40,9 @@ async function run() {
         await polaris_client.authenticate();
 
         log.debug("Authenticated with polaris.");
+
+        const client = PhoneHomeClient.CreateTestClient(log);
+        await client.phone_home(polaris_url, PhoneHomeClient.FindTaskVersion(), "");
 
         var polaris_actions = new PolarisActions(log, tl);
 
