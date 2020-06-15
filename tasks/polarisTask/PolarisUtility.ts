@@ -5,6 +5,7 @@ const axios = require('axios');
 const moment = require("moment");
 const CancelToken = axios.CancelToken;
 const fs = require('fs');
+const fse = require('fs-extra');
 const path = require('path');
 const zipper = require('adm-zip');
 const json_path = require('jsonpath');
@@ -44,8 +45,16 @@ export default class PolarisUtility {
         var polarisInternalFolders = fs.readdirSync(polaris_install);
         var polarisFolder = path.join(polaris_install, polarisInternalFolders[0]);
         var bin = path.join(polarisFolder, "bin");
-        var exe = path.join(bin, this.determine_cli_executable_name(client));
+        await this.ensure_executable("polaris-wait", bin);
+        await this.ensure_executable("polaris-submit", bin);
+        return await this.ensure_executable("polaris", bin);
+    }
+
+    async ensure_executable(exe_name: string, polaris_bin: string): Promise<string> {
+        var exe = path.join(polaris_bin, this.determine_cli_executable_name(exe_name));
         if (fs.existsSync(exe)) {
+            this.log.info(`Ensuring ${exe_name} is executable.`)
+            fs.chmodSync(exe, 0o775);
             return exe;
         } else {
             throw new Error("Could not find polaris even after download.");
