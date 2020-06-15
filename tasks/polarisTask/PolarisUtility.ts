@@ -57,7 +57,7 @@ export default class PolarisUtility {
             fs.chmodSync(exe, 0o775);
             return exe;
         } else {
-            throw new Error("Could not find polaris even after download.");
+            throw new Error(`Ensuring ${exe_name} executable even after download. Expected at: ${exe}`);
         }
     }
 
@@ -80,7 +80,7 @@ export default class PolarisUtility {
                 this.log.info("Creating plugin Polaris home: " + override_home)
                 fse.ensureDirSync(override_home);
             } else {
-                this.log.error("Unable to create POLARIS_HOME, try setting POLARIS_HOME on the agent.");
+                this.log.debug("Polaris home already exists, it will not be created.")
             }
             
             if (fs.existsSync(override_home)) {
