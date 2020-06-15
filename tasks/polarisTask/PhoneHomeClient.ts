@@ -1,5 +1,7 @@
+import { hostname } from "os";
 
 const axios = require('axios');
+const getUuid = require('uuid-by-string')
 
 const Constants = {
     // Google Tracking ID
@@ -45,11 +47,11 @@ export default class PhoneHomeClient {
         this.product_id = product_id;
     }
 
-    static CreateClient = (log: any) => new PhoneHomeClient(log, Constants.PRODUCTION_INTEGRATIONS_TRACKING_ID, "synopsys-polaris", "polaris-ado");
-    static CreateTestClient = (log: any) => new PhoneHomeClient(log, Constants.TEST_INTEGRATIONS_TRACKING_ID, "synopsys-polaris", "polaris-ado");
+    static CreateClient = (log: any) => new PhoneHomeClient(log, Constants.PRODUCTION_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
+    static CreateTestClient = (log: any) => new PhoneHomeClient(log, Constants.TEST_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
     static FindTaskVersion = () => { var task = require("./task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
 
-    async phone_home(polaris_url: string, artifact_version: string, meta_data: any) {
+    async phone_home(polaris_url: string, artifact_version: string, org_name: string | null) {
         if (process.env["BLACKDUCK_SKIP_PHONE_HOME"] || process.env["SYNOPSYS_SKIP_PHONE_HOME"] ) {
             this.log.debug("Will not phone home.")
         }
@@ -58,20 +60,26 @@ export default class PhoneHomeClient {
         data[Constants.API_VERSION_KEY] = "1";
         data[Constants.HIT_TYPE_KEY] = "pageview";
     
-        data[Constants.CLIENT_ID_KEY] = polaris_url; //Unique device
-        data[Constants.CUSTOMER_ID] = polaris_url; //Our identifier for customers
+        var client_id = Constants.UNKOWN_FIELD_VALUE;
+        if (org_name) {
+            client_id = org_name;
+        } else {
+            client_id = polaris_url;
+        }
+        data[Constants.CLIENT_ID_KEY] = getUuid(client_id); //Unique device
+        data[Constants.CUSTOMER_ID] = org_name; //Our identifier for customers
         data[Constants.HOST_NAME] = polaris_url; //The host name (url) of black duck
         
-        data[Constants.TRACKING_ID_KEY] = Constants.PRODUCTION_INTEGRATIONS_TRACKING_ID;
+        data[Constants.TRACKING_ID_KEY] = this.tracking_id;
         data[Constants.DOCUMENT_PATH_KEY] = "phone-home";
     
-        data[Constants.ARTIFACT_ID] = this.artifact_id; //synopsys-polaris-plugin
-        data[Constants.ARTIFACT_VERSION] = artifact_version;
+        data[Constants.ARTIFACT_ID] = this.artifact_id; //name of this plugin (polaris-ado)
+        data[Constants.ARTIFACT_VERSION] = artifact_version; //version of this plugin
     
-        data[Constants.PRODUCT_ID] = this.artifact_id;
-        data[Constants.PRODUCT_VERSION] = Constants.UNKOWN_FIELD_VALUE;
+        data[Constants.PRODUCT_ID] = this.product_id; // A subset, one of BLACKDUCK, POLARIS, COVERITY etc.
+        data[Constants.PRODUCT_VERSION] = Constants.UNKOWN_FIELD_VALUE; //Polaris does not currently support version.
     
-        data[Constants.META_DATA] = JSON.stringify(meta_data);
+        //data[Constants.META_DATA] = JSON.stringify(meta_data);
 
         await axios.post('http://www.google-analytics.com/collect', data, {timeout: 2000});
     };

@@ -65,7 +65,9 @@ async function run() {
         
         try {
             const client = PhoneHomeClient.CreateClient(log);
-            await client.phone_home(polaris_url, PhoneHomeClient.FindTaskVersion(), "");
+            const org_name = await polaris_client.fetch_organization_name();
+            const task_version = PhoneHomeClient.FindTaskVersion();
+            await client.phone_home(polaris_url, task_version, org_name);
             log.debug("Phoned home.");
         } catch (e){
             log.debug("Unable to phone home.");

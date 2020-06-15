@@ -124,6 +124,22 @@ export default class PolarisClient {
             ...this.proxy_config
         });
     }
+
+    async fetch_organization_name(): Promise<string | null> {
+        var target = this.polaris_url + "/api/auth/contexts";
+        var result = await axios({
+            url: url,
+            method: 'GET',
+            responseType: 'json',
+            ...this.proxy_config
+        });
+        var organizationnames = json_path.query(result, "$.data[*].attributes.organizationname");
+        if (organizationnames.length > 0) {
+            return organizationnames[0];
+        } else {
+            return null;
+        }
+    }
     
     async download_cli(url: string, file: string) {
         this.log.debug("Downloading cli from: " + url);
