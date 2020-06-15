@@ -50,6 +50,10 @@ export default class PhoneHomeClient {
     static FindTaskVersion = () => { var task = require("./task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
 
     async phone_home(polaris_url: string, artifact_version: string, meta_data: any) {
+        if (process.env["BLACKDUCK_SKIP_PHONE_HOME"] || process.env["SYNOPSYS_SKIP_PHONE_HOME"] ) {
+            this.log.debug("Will not phone home.")
+        }
+
         const data:any = {};
         data[Constants.API_VERSION_KEY] = "1";
         data[Constants.HIT_TYPE_KEY] = "pageview";
@@ -68,6 +72,7 @@ export default class PhoneHomeClient {
         data[Constants.PRODUCT_VERSION] = Constants.UNKOWN_FIELD_VALUE;
     
         data[Constants.META_DATA] = JSON.stringify(meta_data);
-        await axios.post('http://www.google-analytics.com/collect', data);
+
+        await axios.post('http://www.google-analytics.com/collect', data, {timeout: 2000});
     };
 }
