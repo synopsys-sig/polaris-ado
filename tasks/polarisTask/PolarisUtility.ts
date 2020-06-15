@@ -63,6 +63,23 @@ export default class PolarisUtility {
         } = {
             POLARIS_SERVER_URL: url,
             POLARIS_ACCESS_TOKEN: token
+        if ("POLARIS_HOME" in env) {
+            this.log.info("A POLARIS_HOME exists, will not attempt to override.")    
+        } else {
+            
+            if (!fs.existsSync(override_home)) {
+                this.log.info("Creating plugin Polaris home: " + override_home)
+                fse.ensureDirSync(override_home);
+            } else {
+                this.log.error("Unable to create POLARIS_HOME, try setting POLARIS_HOME on the agent.");
+            }
+            
+            if (fs.existsSync(override_home)) {
+                this.log.info("Set POLARIS_HOME to directory: " + override_home)
+                env["POLARIS_HOME"] = override_home
+            } else {
+                this.log.error("Unable to create a POLARIS_HOME and env variable was not set. Will not override. Try creating POLARIS_HOME on the agent or ensuring agent has access.")
+            }
         }
     
         let go = tl.tool(cliPath);
