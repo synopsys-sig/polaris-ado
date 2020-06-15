@@ -29,11 +29,13 @@ export default class PolarisActions {
         var version_file = path.join(polaris_cli_location, "version.txt");
         var relative_cli_url = polaris_utility.determine_cli_relative_location(polaris_cli_name);
         var cli_url = polaris_url + relative_cli_url;
-    
+        var synopsys_path = path.resolve(polaris_install_path, ".synopsys");
+        var polaris_home = path.resolve(synopsys_path, "polaris");
+
         this.log.info(`Using polaris cli location: ` + polaris_cli_location)
         this.log.info(`Using polaris cli url: ` + cli_url)
-        this.log.debug("Checking for version file: " + version_file)
-    
+        this.log.debug("Checking for version file: " + version_file)      
+
         var download_cli = false;
         var available_version_date = await polaris_client.fetch_cli_modified_date(cli_url);
         if (fs.existsSync(version_file)) {
@@ -74,7 +76,7 @@ export default class PolarisActions {
         var polaris_exe = await polaris_utility.find_executable(polaris_cli_location, polaris_cli_name);
         this.log.info("Found executable: " + polaris_exe)
     
-        var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token, build_command);
+        var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token, build_command, polaris_home);
     
         this.log.info("Polaris exit code: " + polaris_result.returnCode)
         this.log.info("Reading scan result: " + polaris_result.scanCliJsonPath)
