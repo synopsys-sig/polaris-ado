@@ -57,12 +57,12 @@ export default class PolarisUtility {
         await zip.extractAllTo(targetPath, /*overwrite*/ true);
     }
 
-    async execute_cli(cliPath: string, cwd: string, url: string, token: string, build_command: string):Promise<PolarisCliResult> {
-        var env: {
-            [key: string]: string;
-        } = {
-            POLARIS_SERVER_URL: url,
-            POLARIS_ACCESS_TOKEN: token
+    async execute_cli(cliPath: string, cwd: string, url: string, token: string, build_command: string, override_home: string):Promise<PolarisCliResult> {
+        var env: any = process.env;
+        
+        env["POLARIS_SERVER_URL"] = url;
+        env["POLARIS_ACCESS_TOKEN"] = token;
+
         if ("POLARIS_HOME" in env) {
             this.log.info("A POLARIS_HOME exists, will not attempt to override.")    
         } else {
@@ -81,6 +81,7 @@ export default class PolarisUtility {
                 this.log.error("Unable to create a POLARIS_HOME and env variable was not set. Will not override. Try creating POLARIS_HOME on the agent or ensuring agent has access.")
             }
         }
+
     
         let go = tl.tool(cliPath);
         go.line(build_command);
