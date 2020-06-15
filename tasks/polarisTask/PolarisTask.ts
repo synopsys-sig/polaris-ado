@@ -63,8 +63,13 @@ async function run() {
 
         log.debug("Authenticated with polaris.");
         
-        const client = PhoneHomeClient.CreateClient(log);
-        await client.phone_home(polaris_url, PhoneHomeClient.FindTaskVersion(), "");
+        try {
+            const client = PhoneHomeClient.CreateClient(log);
+            await client.phone_home(polaris_url, PhoneHomeClient.FindTaskVersion(), "");
+            log.debug("Phoned home.");
+        } catch (e){
+            log.debug("Unable to phone home.");
+        }
 
         var polaris_actions = new PolarisActions(log, tl);
 
