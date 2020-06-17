@@ -65,8 +65,9 @@ export default class PhoneHomeClient {
             client_id = org_name;
         } else {
             client_id = polaris_url;
+            org_name = Constants.UNKOWN_FIELD_VALUE;
         }
-        data[Constants.CLIENT_ID_KEY] = getUuid(client_id); //Unique device
+        data[Constants.CLIENT_ID_KEY] = getUuid(client_id).toString(); //Unique device
         data[Constants.CUSTOMER_ID] = org_name; //Our identifier for customers
         data[Constants.HOST_NAME] = polaris_url; //The host name (url) of black duck
         

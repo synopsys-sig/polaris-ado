@@ -128,9 +128,10 @@ export default class PolarisClient {
     async fetch_organization_name(): Promise<string | null> {
         var target = this.polaris_url + "/api/auth/contexts";
         var result = await axios({
-            url: url,
+            url: target,
             method: 'GET',
             responseType: 'json',
+            headers: this.headers,
             ...this.proxy_config
         });
         var organizationnames = json_path.query(result, "$.data[*].attributes.organizationname");
