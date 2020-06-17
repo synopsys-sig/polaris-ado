@@ -6,3 +6,5 @@ synopsys-polaris.synopsys-polaris-*.vsix
 .polaris-coverity.zip
 tasks/polarisTask/polaris.zip
 tasks/polarisTask/polaris/polaris_cli-win64-1.8.5/
+polaris/
+polaris.zip

@@ -4,7 +4,7 @@
   "description": "Polaris for Azure DevOps",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && node tasks/polarisTask/PolarisTest.js",
+    "test": "tsc && mocha tasks/polarisTask/tests/_suite.js",
     "build": "tsc && tfx extension create --manifest-globs vss-extension.json"
   },
   "repository": {
@@ -37,5 +37,10 @@
     "tunnel": "0.0.6",
     "uuid-by-string": "^3.0.2",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.0.0",
+    "mocha": "^5.0.0",
+    "sync-request": "^6.1.0"
   }
 }
