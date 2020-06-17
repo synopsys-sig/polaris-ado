@@ -1,0 +1,41 @@
+{
+  "name": "polaris-ado",
+  "version": "1.0.0",
+  "description": "Polaris for Azure DevOps",
+  "main": "index.js",
+  "scripts": {
+    "test": "tsc && node tasks/polarisTask/PolarisTest.js",
+    "build": "tsc && tfx extension create --manifest-globs vss-extension.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/synopsys-sig/polaris-ado.git"
+  },
+  "keywords": [
+    "polaris",
+    "ado",
+    "azure"
+  ],
+  "author": "Synopsys",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/synopsys-sig/polaris-ado/issues"
+  },
+  "homepage": "https://github.com/synopsys-sig/polaris-ado#readme",
+  "dependencies": {
+    "@types/adm-zip": "^0.4.33",
+    "@types/node": "^13.13.4",
+    "@types/q": "^1.5.2",
+    "@types/tunnel": "0.0.1",
+    "adm-zip": "^0.4.14",
+    "axios": "^0.19.2",
+    "azure-pipelines-task-lib": "^2.9.3",
+    "azure-pipelines-tool-lib": "^0.12.0",
+    "fs-extra": "^8.1.0",
+    "jsonpath": "^1.0.2",
+    "moment": "^2.25.3",
+    "tunnel": "0.0.6",
+    "uuid-by-string": "^3.0.2",
+    "winston": "^3.2.1"
+  }
+}
