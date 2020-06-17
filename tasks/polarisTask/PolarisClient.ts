@@ -134,7 +134,7 @@ export default class PolarisClient {
             headers: this.headers,
             ...this.proxy_config
         });
-        var organizationnames = json_path.query(result, "$.data[*].attributes.organizationname");
+        var organizationnames = json_path.query(result.data, "$.data[*].attributes.organizationname");
         if (organizationnames.length > 0) {
             return organizationnames[0];
         } else {
