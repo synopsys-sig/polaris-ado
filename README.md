@@ -4,10 +4,12 @@ Polaris Extension for Azure DevOps Synopsys Polaris helps security and developme
 
 # Development
 
-Install npm modules: npm install
-Copy npm modules into task folder: cp node_modules tasks/polarisTask/node_modules
+Install npm modules: `npm install`
 
-Build with: npm run build
-Test with: npm run test
+Copy npm modules into task folder: `cp node_modules tasks/polarisTask/node_modules`
+
+Build with: `npm run build`
+
+Test with: `npm run test`
 
 For a new version, make sure to change: task.json and vss-extension.json.
