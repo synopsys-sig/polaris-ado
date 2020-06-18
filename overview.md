@@ -10,4 +10,5 @@ As a Synopsys and Azure DevOps user, the Synopsys Polaris Extension for Azure De
 2. After a scan is complete, the results are available on the Synopsys Polaris server
 3. If issues are found, the extension can fail the build
 
-![Polaris Scan Results](Downloads/image001.png⁩)
+![Polaris Scan Results](images/image001.png⁩)
+![Azure DevOps Extension](images/image018.jpg⁩)
