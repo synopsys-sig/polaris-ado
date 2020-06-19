@@ -1,12 +1,15 @@
-# polaris-ado
-Polaris for Azure DevOps.
+# Polaris for Azure DevOps.
 
-Install npm modules: npm install
-Copy npm modules into task folder: cp node_modules tasks/polarisTask/node_modules
+Polaris Extension for Azure DevOps Synopsys Polaris helps security and development teams analyze security risks in their software products. The Synopsys Polaris Extension for Azure DevOps enables you to invoke Synopsys Polaris analysis from your Azure DevOps pipelines.
 
-Build with: npm run build
-Test with: npm run test
+# Development
 
-For a new version, change the task:
-task.json, version: major/minor/patch
-vss-extension.json, version
+Install npm modules: `npm install`
+
+Copy npm modules into task folder: `cp node_modules tasks/polarisTask/node_modules`
+
+Build with: `npm run build`
+
+Test with: `npm run test`
+
+For a new version, make sure to change: task.json and vss-extension.json.
