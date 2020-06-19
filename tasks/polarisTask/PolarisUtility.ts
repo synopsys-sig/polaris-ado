@@ -45,19 +45,22 @@ export default class PolarisUtility {
         var polarisInternalFolders = fs.readdirSync(polaris_install);
         var polarisFolder = path.join(polaris_install, polarisInternalFolders[0]);
         var bin = path.join(polarisFolder, "bin");
-        await this.ensure_executable("polaris-wait", bin);
-        await this.ensure_executable("polaris-submit", bin);
-        return await this.ensure_executable("polaris", bin);
+        var exes = fs.readdirSync(bin);
+        for (var i in exes) {
+            var file = exes[i];
+            await this.ensure_executable(path.join(bin, file));
+        }
+        var polaris_exe = this.determine_cli_executable_name("polaris");
+        return path.join(bin, polaris_exe);
     }
 
-    async ensure_executable(exe_name: string, polaris_bin: string): Promise<string> {
-        var exe = path.join(polaris_bin, this.determine_cli_executable_name(exe_name));
+    async ensure_executable(exe: string): Promise<string> {
         if (fs.existsSync(exe)) {
-            this.log.info(`Ensuring ${exe_name} is executable.`)
+            this.log.debug(`Ensuring ${exe} is executable.`)
             fs.chmodSync(exe, 0o775);
             return exe;
         } else {
-            throw new Error(`Ensuring ${exe_name} executable even after download. Expected at: ${exe}`);
+            throw new Error(`Could not make ${exe} executable.`);
         }
     }
 
