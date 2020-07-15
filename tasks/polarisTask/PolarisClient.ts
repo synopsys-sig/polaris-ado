@@ -49,11 +49,11 @@ export default class PolarisClient {
         if (proxy_info != undefined) {
             log.info(`Using Proxy URL: ${proxy_info.proxy_url}`)
             const proxy_url = url.parse(proxy_info.proxy_url);
-            log.info(`Proxy Host: ${proxy_url.host}`)
+            log.info(`Proxy Host: ${proxy_url.hostname}`)
             log.info(`Proxy Port: ${proxy_url.port}`)
             var tunnelConfig: tunnel.HttpOverHttpsOptions = <tunnel.HttpOverHttpsOptions>{
                 proxy: {
-                    host: proxy_url.host,
+                    host: proxy_url.hostname,
                     port: proxy_url.port
                 }
             };
@@ -70,6 +70,7 @@ export default class PolarisClient {
     async authenticate() {
         this.log.info("Authenticating with polaris.")
         this.bearer_token = await this.fetch_bearer_token();
+        
         this.headers = {
             Authorization: `Bearer ${this.bearer_token}`
         }
@@ -84,13 +85,19 @@ export default class PolarisClient {
     async fetch_bearer_token() {
         var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
         var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + this.access_token
-        var authResponse = await axios.post(authenticateUrl, null, this.proxy_config);
-        if (authResponse.data.jwt) {
-            this.log.info("Succesfully authenticated, saving bearer token.")
-            return authResponse.data.jwt;
-        } else {
-            this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
-            throw new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`)
+        try {
+            var authResponse = await axios.post(authenticateUrl, null, this.proxy_config);
+            if (authResponse.data.jwt) {
+                this.log.info("Succesfully authenticated, saving bearer token.")
+                return authResponse.data.jwt;
+            } else {
+                this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
+                throw new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`)
+            }
+        } catch (e) {
+            this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
+            this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
+            throw e;
         }
     }
 
