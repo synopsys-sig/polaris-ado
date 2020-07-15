@@ -51,7 +51,7 @@ export default class PolarisClient {
             const proxy_url = url.parse(proxy_info.proxy_url);
             log.info(`Proxy Host: ${proxy_url.hostname}`)
             log.info(`Proxy Port: ${proxy_url.port}`)
-            var tunnelConfig: tunnel.HttpOverHttpsOptions = <tunnel.HttpOverHttpsOptions>{
+            var tunnelConfig: tunnel.HttpsOverHttpOptions = <tunnel.HttpsOverHttpOptions>{
                 proxy: {
                     host: proxy_url.hostname,
                     port: proxy_url.port
@@ -63,7 +63,7 @@ export default class PolarisClient {
             }
 
             const agent = tunnel.httpsOverHttp(tunnelConfig)
-            this.proxy_config =  { "httpsAgent": agent }
+            this.proxy_config =  { "agent": agent }
         }
     }
 
