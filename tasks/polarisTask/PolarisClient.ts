@@ -1,6 +1,7 @@
 
 import * as os from 'os';
 import * as tunnel from 'tunnel';
+var ProxyAgent = require("proxy-agent");
 
 const url = require('url');
 const winston = require("winston");
@@ -48,22 +49,13 @@ export default class PolarisClient {
 
         if (proxy_info != undefined) {
             log.info(`Using Proxy URL: ${proxy_info.proxy_url}`)
-            const proxy_url = url.parse(proxy_info.proxy_url);
-            log.info(`Proxy Host: ${proxy_url.hostname}`)
-            log.info(`Proxy Port: ${proxy_url.port}`)
-            var tunnelConfig: tunnel.HttpsOverHttpOptions = <tunnel.HttpsOverHttpOptions>{
-                proxy: {
-                    host: proxy_url.hostname,
-                    port: proxy_url.port
-                }
-            };
-            if (proxy_info.proxy_username && proxy_info.proxy_password && tunnelConfig.proxy) {
+            var proxyOpts = url.parse(proxy_info.proxy_url);
+            if (proxy_info.proxy_username && proxy_info.proxy_password) {
                 log.info("Using configured proxy credentials.")
-                tunnelConfig.proxy.proxyAuth = proxy_info.proxy_username + ":" + proxy_info.proxy_password;
+                proxyOpts.auth = proxy_info.proxy_username + ":" + proxy_info.proxy_password;
             }
-
-            const agent = tunnel.httpsOverHttp(tunnelConfig)
-            this.proxy_config =  { "agent": agent }
+            const proxyAgent = new ProxyAgent(proxyOpts);  // http://127.0.0.1:1080
+            this.proxy_config =  { "httpsAgent": proxyAgent, "httpAgent": proxyAgent , proxy: false }
         }
     }
 
