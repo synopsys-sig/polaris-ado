@@ -1,17 +1,17 @@
 
 import * as os from 'os';
-import * as tunnel from 'tunnel';
 var ProxyAgent = require("proxy-agent");
-
+const HttpsProxyAgent = require("https-proxy-agent");
 const url = require('url');
 const winston = require("winston");
-const axios = require('axios');
+const Axios = require('axios');
 const moment = require("moment");
-const CancelToken = axios.CancelToken;
+const CancelToken = Axios.CancelToken;
 const fs = require('fs');
 const path = require('path');
 const zipper = require('adm-zip');
 const json_path = require('jsonpath');
+const tunnel = require('tunnel');
 
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
@@ -33,7 +33,7 @@ export default class PolarisClient {
     access_token: string;
     bearer_token: string | null;
     headers: any | null;
-    proxy_config: object;
+    axios: any;
     constructor(log:any, polaris_url: string, access_token: string, proxy_info: PolarisProxyInfo | undefined) {
         if (polaris_url.endsWith("/") || polaris_url.endsWith("\\")) {
             this.polaris_url = polaris_url.slice(0, -1);
@@ -45,31 +45,39 @@ export default class PolarisClient {
         this.bearer_token = null;
         this.headers = null;
         this.log = log;
-        this.proxy_config = {};
+        
 
         if (proxy_info != undefined) {
             log.info(`Using Proxy URL: ${proxy_info.proxy_url}`)
             var proxyOpts = url.parse(proxy_info.proxy_url);
+
+            var proxyConfig :any = { 
+                host: proxyOpts.hostname, 
+                port: proxyOpts.port 
+            };
+
             if (proxy_info.proxy_username && proxy_info.proxy_password) {
                 log.info("Using configured proxy credentials.")
-                proxyOpts.auth = proxy_info.proxy_username + ":" + proxy_info.proxy_password;
+                proxyConfig.auth = proxy_info.proxy_username + ":" + proxy_info.proxy_password;
             }
-            const proxyAgent = new ProxyAgent(proxyOpts);  // http://127.0.0.1:1080
-            this.proxy_config =  { "httpsAgent": proxyAgent, "httpAgent": proxyAgent , proxy: false }
+
+            const httpsAgent = new HttpsProxyAgent(proxyConfig)
+            this.axios = Axios.create({httpsAgent});
+        } else {
+            this.axios = Axios.create();
         }
     }
 
     async authenticate() {
         this.log.info("Authenticating with polaris.")
         this.bearer_token = await this.fetch_bearer_token();
-        
         this.headers = {
             Authorization: `Bearer ${this.bearer_token}`
         }
     }
 
     async get_job(job_status_url: string) {
-        return await axios.get(job_status_url, {...this.proxy_config,
+        return await this.axios.get(job_status_url, {
             headers: this.headers
         });
     }
@@ -77,8 +85,9 @@ export default class PolarisClient {
     async fetch_bearer_token() {
         var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
         var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + this.access_token
+        
         try {
-            var authResponse = await axios.post(authenticateUrl, null, this.proxy_config);
+            var authResponse = await this.axios.post(authenticateUrl);
             if (authResponse.data.jwt) {
                 this.log.info("Succesfully authenticated, saving bearer token.")
                 return authResponse.data.jwt;
@@ -98,12 +107,11 @@ export default class PolarisClient {
         var self = this;
         self.log.debug("Fetching cli modified date from: " + url);
         return new Promise((resolve, reject) => {
-            axios({
+            this.axios({
                 url: url,
                 method: 'GET',
                 responseType: 'stream', // important, let's us cancel the after we get the headers.
-                cancelToken: token.token,
-                ...this.proxy_config
+                cancelToken: token.token
             }).then(function (response: any) {
                 var lastModifiedText = response.headers['last-modified'];
                 self.log.debug("Last Modified Header: " + lastModifiedText);
@@ -118,20 +126,18 @@ export default class PolarisClient {
     }
 
     async fetch_issue_data(url: string): Promise<any> {
-        return await axios.get(url, {
-            headers: this.headers,
-            ...this.proxy_config
+        return await this.axios.get(url, {
+            headers: this.headers
         });
     }
 
     async fetch_organization_name(): Promise<string | null> {
         var target = this.polaris_url + "/api/auth/contexts";
-        var result = await axios({
+        var result = await this.axios({
             url: target,
             method: 'GET',
             responseType: 'json',
             headers: this.headers,
-            ...this.proxy_config
         });
         var organizationnames = json_path.query(result.data, "$.data[*].attributes.organizationname");
         if (organizationnames.length > 0) {
@@ -147,11 +153,10 @@ export default class PolarisClient {
 
         const writer = fs.createWriteStream(file);
     
-        const response = await axios({
+        const response = await this.axios({
             url,
             method: 'GET',
-            responseType: 'stream',
-            ...this.proxy_config
+            responseType: 'stream'
         });
     
         response.data.pipe(writer);
