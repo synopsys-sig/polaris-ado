@@ -9,8 +9,8 @@ const fse = require('fs-extra');
 const path = require('path');
 const zipper = require('adm-zip');
 const json_path = require('jsonpath');
-
-import PolarisClient from "./PolarisClient"
+const urlParser = require('url');
+import { default as PolarisClient, PolarisProxyInfo } from "./PolarisClient"
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 
@@ -69,11 +69,19 @@ export default class PolarisUtility {
         await zip.extractAllTo(targetPath, /*overwrite*/ true);
     }
 
-    async execute_cli(cliPath: string, cwd: string, url: string, token: string, build_command: string, override_home: string):Promise<PolarisCliResult> {
+    async execute_cli(cliPath: string, cwd: string, url: string, token: string, build_command: string, override_home: string, proxy: PolarisProxyInfo | undefined):Promise<PolarisCliResult> {
         var env: any = process.env;
         
         env["POLARIS_SERVER_URL"] = url;
         env["POLARIS_ACCESS_TOKEN"] = token;
+
+        if (proxy != undefined) {
+            var proxyOpts = urlParser.parse(proxy.proxy_url);
+            if (proxy.proxy_username && proxy.proxy_password) {
+                proxyOpts.auth = proxy.proxy_username + ":" + proxy.proxy_password;
+            }
+            env["HTTPS_PROXY"] = urlParser.format(proxyOpts);
+        }
 
         if ("POLARIS_HOME" in env) {
             this.log.info("A POLARIS_HOME exists, will not attempt to override.")    

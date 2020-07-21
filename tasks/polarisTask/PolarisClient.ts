@@ -12,7 +12,7 @@ const path = require('path');
 const zipper = require('adm-zip');
 const json_path = require('jsonpath');
 const tunnel = require('tunnel');
-
+const debug = require('debug');
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
 
@@ -70,7 +70,9 @@ export default class PolarisClient {
 
     async authenticate() {
         this.log.info("Authenticating with polaris.")
+        debug.enable('https-proxy-agent');
         this.bearer_token = await this.fetch_bearer_token();
+        debug.disable();
         this.headers = {
             Authorization: `Bearer ${this.bearer_token}`
         }
@@ -82,24 +84,39 @@ export default class PolarisClient {
         });
     }
 
-    async fetch_bearer_token() {
-        var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
-        var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + this.access_token
-        
-        try {
-            var authResponse = await this.axios.post(authenticateUrl);
-            if (authResponse.data.jwt) {
-                this.log.info("Succesfully authenticated, saving bearer token.")
-                return authResponse.data.jwt;
-            } else {
-                this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
-                throw new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`)
+    fetch_bearer_token():Promise<string> {
+        // this is a workaround for https://github.com/TooTallNate/node-https-proxy-agent/issues/102
+        //basically NodeJS thinks all event loops are closed, this ensures the event look hasn't closed. 
+        // TODO: Need to switch to a new http library that doesn't suffer from this bug.
+        //Basically we need to reject the promise ourselves 
+        const resultPromise = new Promise<string>((resolve, reject) => {
+            const timeout = 10000
+            setTimeout(() => { reject(new Error(`Failed to authenticate with polaris. This may be a problem with your polaris url, proxy setup or network.`))}, timeout);
+
+            var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
+            var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + this.access_token
+    
+            try {
+                this.axios.post(authenticateUrl, null, {timeout: 10000}).then((authResponse:any) => {
+                    if (authResponse.data.jwt) {
+                        this.log.info("Succesfully authenticated, saving bearer token.")
+                        resolve(authResponse.data.jwt);
+                    } else {
+                        this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
+                        reject(new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`))
+                    }
+                }).catch((e:any) => {
+                    this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
+                    this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
+                    reject(e);
+                })
+            } catch (e) {
+                this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
+                this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
+                reject(e);
             }
-        } catch (e) {
-            this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
-            this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
-            throw e;
-        }
+        })
+        return resultPromise;
     }
 
     async fetch_cli_modified_date(url: string): Promise<any> { //return type should be a moment

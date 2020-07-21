@@ -8,7 +8,7 @@ const zipper = require('adm-zip');
 const json_path = require('jsonpath');
 const fse = require('fs-extra');
 
-import PolarisClient from "./PolarisClient"
+import { default as PolarisClient, PolarisProxyInfo } from "./PolarisClient"
 import PolarisUtility from "./PolarisUtility"
 import PolarisJobService from './PolarisJobService';
 
@@ -20,7 +20,7 @@ export default class PolarisActions {
         this.log = log;
     }
 
-    async execute(polaris_url: string, polaris_token:string, polaris_target:string, polaris_install_path:string, polaris_client: PolarisClient, build_command: string): Promise<String> {
+    async execute(polaris_url: string, polaris_token:string, polaris_target:string, polaris_install_path:string, polaris_client: PolarisClient, build_command: string, proxy: PolarisProxyInfo | undefined): Promise<String> {
         this.log.info("Starting polaris task.")
         var polaris_cli_name = "polaris"; // used to be "swip"
         var polaris_utility = new PolarisUtility(this.log);
@@ -76,7 +76,7 @@ export default class PolarisActions {
         var polaris_exe = await polaris_utility.find_executable(polaris_cli_location, polaris_cli_name);
         this.log.info("Found executable: " + polaris_exe)
     
-        var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token, build_command, polaris_home);
+        var polaris_result = await polaris_utility.execute_cli(polaris_exe, polaris_target, polaris_url, polaris_token, build_command, polaris_home, proxy);
     
         this.log.info("Polaris exit code: " + polaris_result.returnCode)
         this.log.info("Reading scan result: " + polaris_result.scanCliJsonPath)
