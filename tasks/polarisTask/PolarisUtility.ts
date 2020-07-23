@@ -115,6 +115,8 @@ export default class PolarisUtility {
         var polarisFolder = path.join(synopsysFolder, "polaris");
         var scanJsonFile = path.join(polarisFolder, "cli-scan.json");
 
+        delete process.env["HTTPS_PROXY"];
+
         return new PolarisCliResult(return_code, scanJsonFile);
     }
 }
