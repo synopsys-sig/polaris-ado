@@ -1,4 +1,5 @@
 import { hostname } from "os";
+import qs from 'qs'
 
 const axios = require('axios');
 const getUuid = require('uuid-by-string')
@@ -82,6 +83,13 @@ export default class PhoneHomeClient {
     
         //data[Constants.META_DATA] = JSON.stringify(meta_data);
 
-        await axios.post(Constants.BASE_URL + Constants.COLLECT_ENDPOINT, data, {timeout: 2000});
+        var response = await axios({
+            'method': 'post',
+            'url': Constants.BASE_URL + Constants.COLLECT_ENDPOINT,
+            'timeout': 2000,
+            'data': qs.stringify(data),
+            'headers': {
+                'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
+            }});
     };
 }
