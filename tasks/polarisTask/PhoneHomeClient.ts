@@ -82,6 +82,6 @@ export default class PhoneHomeClient {
     
         //data[Constants.META_DATA] = JSON.stringify(meta_data);
 
-        await axios.post('http://www.google-analytics.com/collect', data, {timeout: 2000});
+        await axios.post(Constants.BASE_URL + Constants.COLLECT_ENDPOINT, data, {timeout: 2000});
     };
 }
