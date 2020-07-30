@@ -1,6 +1,6 @@
 {
     "id": "62645f53-3f11-41b1-b439-b7197034d52c",
-    "name": "synopsys-polaris-task",
+    "name": "SynopsysPolarisTask",
     "friendlyName": "Synopsys Polaris",
     "description": "The Azure Dev Ops plugin for Synopsys Polaris.",
     "helpMarkDown": "",
