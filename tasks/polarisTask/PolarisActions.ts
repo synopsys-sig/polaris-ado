@@ -116,7 +116,7 @@ export default class PolarisActions {
             this.log.info("Total issues: " + total_count)
     
             if (total_count > 0) {
-                this.tl.setResult(this.tl.TaskResult.Failed, `Polaris found ${total_count} total issues.`);
+                this.tl.setResult(this.tl.TaskResult.Failed, ` Polaris found ${total_count} total issues.`);
             }
         } else {
             this.log.info("Did not find any issue counts.")
