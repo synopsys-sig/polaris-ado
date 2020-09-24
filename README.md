@@ -4,7 +4,7 @@ Polaris Extension for Azure DevOps Synopsys Polaris helps security and developme
 
 # Development
 
-Requires TFX-CLI and TypeScript: `npm i -g tfx-cli` and `npm install typescript --save-dev`
+Requires TFX-CLI and TypeScript: `npm i -g tfx-cli` and `npm install typescript`
 
 Install npm modules: `npm install`
 
