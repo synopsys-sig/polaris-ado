@@ -93,11 +93,10 @@ export default class PolarisClient {
             const timeout = 10000
             setTimeout(() => { reject(new Error(`Failed to authenticate with polaris. This may be a problem with your polaris url, proxy setup or network.`))}, timeout);
 
-            var authenticateBaseUrl = this.polaris_url + "/api/auth/authenticate";
-            var authenticateUrl = authenticateBaseUrl + "?accesstoken=" + this.access_token
+            var authenticateUrl = this.polaris_url + "/api/auth/authenticate";
     
             try {
-                this.axios.post(authenticateUrl, null, {timeout: 10000}).then((authResponse:any) => {
+                this.axios.post(authenticateUrl, "accesstoken=" + this.access_token, {timeout: 10000, headers: {'Content-Type': 'application/x-www-form-urlencoded'}}).then((authResponse:any) => {
                     if (authResponse.data.jwt) {
                         this.log.info("Succesfully authenticated, saving bearer token.")
                         resolve(authResponse.data.jwt);
@@ -106,12 +105,12 @@ export default class PolarisClient {
                         reject(new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`))
                     }
                 }).catch((e:any) => {
-                    this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
+                    this.log.error(`Unable to authenticate with polaris at url: ${authenticateUrl}`);
                     this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
                     reject(e);
                 })
             } catch (e) {
-                this.log.error(`Unable to authenticate with polaris at url: ${authenticateBaseUrl}`);
+                this.log.error(`Unable to authenticate with polaris at url: ${authenticateUrl}`);
                 this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
                 reject(e);
             }
