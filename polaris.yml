@@ -36,4 +36,4 @@ analyze:
 install:
   coverity:
     version: default
-serverUrl: https://dev01.dev.polaris.synopsys.com
+serverUrl: https://qa.dev.polaris.synopsys.com

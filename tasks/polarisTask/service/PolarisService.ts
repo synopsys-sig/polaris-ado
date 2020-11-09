@@ -3,62 +3,46 @@ import * as os from 'os';
 var ProxyAgent = require("proxy-agent");
 const HttpsProxyAgent = require("https-proxy-agent");
 const url = require('url');
-const winston = require("winston");
 const Axios = require('axios');
 const moment = require("moment");
 const CancelToken = Axios.CancelToken;
 const fs = require('fs');
-const path = require('path');
-const zipper = require('adm-zip');
 const json_path = require('jsonpath');
-const tunnel = require('tunnel');
 const debug = require('debug');
-import tl = require("azure-pipelines-task-lib/task");
-import tr = require("azure-pipelines-task-lib/toolrunner");
+import {PolarisConnection} from "../model/PolarisConnection";
 
-export class PolarisProxyInfo {
-    proxy_url: string;
-    proxy_username: string | undefined;
-    proxy_password: string| undefined;
-    constructor(proxy_url: string, proxy_username: string| undefined, proxy_password: string| undefined) {
-        this.proxy_url = proxy_url
-        this.proxy_username = proxy_username
-        this.proxy_password = proxy_password
-    }
-}
-
-export default class PolarisClient {
+export default class PolarisService {
     log: any;
     polaris_url: string;
     access_token: string;
     bearer_token: string | null;
     headers: any | null;
     axios: any;
-    constructor(log:any, polaris_url: string, access_token: string, proxy_info: PolarisProxyInfo | undefined) {
-        if (polaris_url.endsWith("/") || polaris_url.endsWith("\\")) {
-            this.polaris_url = polaris_url.slice(0, -1);
+    constructor(log:any, connection: PolarisConnection) {
+        if (connection.url.endsWith("/") || connection.url.endsWith("\\")) {
+            this.polaris_url = connection.url.slice(0, -1);
         } else {
-            this.polaris_url = polaris_url;
+            this.polaris_url = connection.url;
         }
         
-        this.access_token = access_token;
+        this.access_token = connection.token;
         this.bearer_token = null;
         this.headers = null;
         this.log = log;
         
 
-        if (proxy_info != undefined) {
-            log.info(`Using Proxy URL: ${proxy_info.proxy_url}`)
-            var proxyOpts = url.parse(proxy_info.proxy_url);
+        if (connection.proxy != undefined) {
+            log.info(`Using Proxy URL: ${connection.proxy.proxy_url}`)
+            var proxyOpts = url.parse(connection.proxy.proxy_url);
 
             var proxyConfig :any = { 
                 host: proxyOpts.hostname, 
                 port: proxyOpts.port 
             };
 
-            if (proxy_info.proxy_username && proxy_info.proxy_password) {
+            if (connection.proxy.proxy_username && connection.proxy.proxy_password) {
                 log.info("Using configured proxy credentials.")
-                proxyConfig.auth = proxy_info.proxy_username + ":" + proxy_info.proxy_password;
+                proxyConfig.auth = connection.proxy.proxy_username + ":" + connection.proxy.proxy_password;
             }
 
             const httpsAgent = new HttpsProxyAgent(proxyConfig)
@@ -155,9 +139,9 @@ export default class PolarisClient {
             responseType: 'json',
             headers: this.headers,
         });
-        var organizationnames = json_path.query(result.data, "$.data[*].attributes.organizationname");
-        if (organizationnames.length > 0) {
-            return organizationnames[0];
+        var organization_names = json_path.query(result.data, "$.data[*].attributes.organizationname");
+        if (organization_names.length > 0) {
+            return organization_names[0];
         } else {
             return null;
         }

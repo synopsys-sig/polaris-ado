@@ -1,4 +1,3 @@
-import { hostname } from "os";
 import qs from 'qs'
 
 const axios = require('axios');
@@ -36,7 +35,7 @@ const Constants = {
     UNKOWN_FIELD_VALUE: "<unknown>"
 }
 
-export default class PhoneHomeClient {
+export default class PhoneHomeService {
     log: any;
     tracking_id: string;
     product_id: string;
@@ -48,9 +47,9 @@ export default class PhoneHomeClient {
         this.product_id = product_id;
     }
 
-    static CreateClient = (log: any) => new PhoneHomeClient(log, Constants.PRODUCTION_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
-    static CreateTestClient = (log: any) => new PhoneHomeClient(log, Constants.TEST_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
-    static FindTaskVersion = () => { var task = require("./task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
+    static CreateClient = (log: any) => new PhoneHomeService(log, Constants.PRODUCTION_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
+    static CreateTestClient = (log: any) => new PhoneHomeService(log, Constants.TEST_INTEGRATIONS_TRACKING_ID, "POLARIS", "polaris-ado");
+    static FindTaskVersion = () => { var task = require("../task.json"); return task.version.Major + "." + task.version.Minor + "." + task.version.Patch; }
 
     async phone_home(polaris_url: string, artifact_version: string, org_name: string | null) {
         if (process.env["BLACKDUCK_SKIP_PHONE_HOME"] || process.env["SYNOPSYS_SKIP_PHONE_HOME"] ) {

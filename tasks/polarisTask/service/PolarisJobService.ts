@@ -1,20 +1,11 @@
-
-import * as os from 'os';
-const winston = require("winston");
-const axios = require('axios');
-const moment = require("moment");
-const CancelToken = axios.CancelToken;
-const fs = require('fs');
-const path = require('path');
-const zipper = require('adm-zip');
 const json_path = require('jsonpath');
 
-import PolarisClient from "./PolarisClient"
+import PolarisService from "./PolarisService"
 
 export default class PolarisJobService {
     log: any;
-    polaris_client: PolarisClient
-    constructor(log:any, polaris_client: PolarisClient) {
+    polaris_client: PolarisService
+    constructor(log:any, polaris_client: PolarisService) {
         this.log = log;
         this.polaris_client = polaris_client;
     }

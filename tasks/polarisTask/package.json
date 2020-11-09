@@ -4,7 +4,8 @@
   "description": "Polaris for Azure DevOps",
   "main": "index.js",
   "scripts": {
-    "test": "tsc && node tasks/polarisTask/PolarisTest.js",
+    "proxy": "tsc && node tasks/polarisTask/ProxyText.js",
+    "test": "tsc && mocha tasks/polarisTask/tests/_suite.js",
     "build": "tsc && tfx extension create --manifest-globs vss-extension.json"
   },
   "repository": {
