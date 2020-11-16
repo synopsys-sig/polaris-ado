@@ -14,6 +14,13 @@ export default class PolarisInstaller {
     executable_finder: PolarisExecutableFinder;
     platform_support: PolarisPlatformSupport;
     polaris_service: PolarisService;
+
+    static default_installer(log:any, polaris_service: PolarisService) {
+        const platform_support = new PolarisPlatformSupport();
+        const executable_finder = new PolarisExecutableFinder(log, platform_support);
+        return new PolarisInstaller(log, executable_finder, platform_support, polaris_service);
+    }
+
     constructor(log:any, executable_finder: PolarisExecutableFinder, platform_support: PolarisPlatformSupport, polaris_service: PolarisService) {
         this.log = log;
         this.executable_finder = executable_finder;
