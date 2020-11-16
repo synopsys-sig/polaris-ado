@@ -9,7 +9,7 @@
     "version": {
         "Major": 1,
         "Minor": 1,
-        "Patch": 3
+        "Patch": 4
     },
     "instanceNameFormat": "Synopsys Polaris $(buildCommand)",
     "inputs": [
@@ -43,6 +43,25 @@
             "label": "Check for issues",
             "defaultValue": false,
             "helpMarkDown": "If enabled, this task wait for the polaris instance and fail the build if issues are detected."
+        },
+        {
+            "name": "populateChangeSetFile",
+            "type": "boolean",
+            "label": "Populate SCM changeset in file at $CHANGE_SET_FILE_PATH for incremental analysis",
+            "defaultValue": false,
+            "helpMarkDown": "If enabled, a file is created at CHANGE_SET_FILE_PATH with the absolute paths to all changed files. If the environment variable is not present, the file will be created at .synopsys/polaris/changeSetFile.txt and the environment variable will be set. Note that $CHANGE_SET_FILE_PATH will be replaced with the given path in the command."
+        },
+        {
+            "name": "whenChangeSetEmpty",
+            "type": "pickList",
+            "label": "When static analysis is skipped because the changeset contained no files to analyze",
+            "defaultValue": "succeed",
+            "helpMarkDown": "If there are no changed files, the task can be configured to succeed or fail.",
+            "options": {
+                "succeed": "Succeed",
+                "fail": "Fail"
+            },
+            "visibleRule": "populateChangeFile = true"
         }
     ],
     "execution": {

@@ -11,7 +11,7 @@ export default class PolarisIssueWaiter {
         this.log = log;
     }
 
-    async wait_for_issues(scan_cli_json_path: String, polaris_service: PolarisService) {
+    async wait_for_issues(scan_cli_json_path: String, polaris_service: PolarisService): Promise<number | null> {
         var scan_json_text = fs.readFileSync(scan_cli_json_path);
         var scan_json = JSON.parse(scan_json_text);
 
@@ -41,12 +41,10 @@ export default class PolarisIssueWaiter {
         if (issue_counts.length != 0) {
             var total_count = issue_counts.reduce((a:any, b:any) => a + b, 0)
             this.log.info("Total issues: " + total_count)
-
-            if (total_count > 0) {
-                tl.setResult(tl.TaskResult.Failed, ` Polaris found ${total_count} total issues.`);
-            }
+            return total_count;
         } else {
             this.log.info("Did not find any issue counts.")
+            return null;
         }
     }
 }

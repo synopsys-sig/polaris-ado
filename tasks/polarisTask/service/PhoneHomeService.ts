@@ -36,7 +36,7 @@ const Constants = {
 }
 
 export default class PhoneHomeService {
-    log: any;
+    log: any; //TODO use logger type.
     tracking_id: string;
     product_id: string;
     artifact_id: string;

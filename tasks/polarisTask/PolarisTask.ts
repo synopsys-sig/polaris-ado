@@ -3,18 +3,23 @@ import * as os from 'os';
 const winston = require("winston");
 import PhoneHomeService from "./service/PhoneHomeService"
 import tl = require("azure-pipelines-task-lib/task");
-import PolarisInputReader from "./util/PolarisInputReader";
+import PolarisInputReader from "./input/PolarisInputReader";
 import {PolarisTaskInputs} from "./model/PolarisTaskInput";
 import PolarisInstaller from "./cli/PolarisInstaller";
 import PolarisRunner from "./cli/PolarisRunner";
 import PolarisIssueWaiter from "./util/PolarisIssueWaiter";
-import PolarisExecutableFinder from "./cli/PolarisExecutableFinder";
-import PolarisPlatformSupport from "./util/PolarisPlatformSupport";
 import {PolarisInstall} from "./model/PolarisInstall";
 import PolarisService from "./service/PolarisService";
+import {PolarisConnection} from "./model/PolarisConnection";
+import {Logger} from "winston";
+import ChangeSetFileWriter from "./changeset/ChangeSetFileWriter";
+import IChangeSetCreator from "./changeset/IChangeSetCreator";
+import ChangeSetEnvironment from "./changeset/ChangeSetEnvironment";
+import ChangeSetReplacement from "./changeset/ChangeSetReplacement";
+import GitChangeSetCreator from "./changeset/git/GitChangeSetCreator";
 var task = require("./task.json")
 
-const log = winston.createLogger({
+const log : Logger = winston.createLogger({
     level: "debug",
     transports: [
         new (winston.transports.Console)({
@@ -29,11 +34,11 @@ const log = winston.createLogger({
 async function run() {
     try {
         log.info("Polaris task started.");
-        var task_input: PolarisTaskInputs = new PolarisInputReader().readInput();
-        var connection = task_input.polaris_connection;
+        const task_input: PolarisTaskInputs = new PolarisInputReader().readInput();
+        const connection: PolarisConnection = task_input.polaris_connection;
         log.debug(`Read task configuration: ${connection.url} @ ${connection.token}`);
 
-        let polaris_install_path: string | undefined;
+        var polaris_install_path: string | undefined;
         polaris_install_path = tl.getVariable('Agent.ToolsDirectory');
         if (!polaris_install_path) {
             log.warn("Agent did not have a tool directory, polaris will be installed to the current working directory.");
@@ -61,23 +66,40 @@ async function run() {
         }
 
         log.debug("Installing polaris.");
-        var platform_support = new PolarisPlatformSupport();
-        var executable_finder = new PolarisExecutableFinder(log, platform_support);
-        var polaris_installer = new PolarisInstaller(log, executable_finder, platform_support, polaris_service);
+        var polaris_installer = PolarisInstaller.default_installer(log, polaris_service);
         var polaris_install: PolarisInstall = await polaris_installer.install_or_locate_polaris(connection.url, polaris_install_path);
         log.debug("Found polaris: " + polaris_install.polaris_executable);
 
+        var actual_build_command = task_input.build_command;
+        if (task_input.should_populate_changeset) {
+            log.debug("Populating change set for polaris.");
+            const changed_files = await new GitChangeSetCreator(log).generate_change_set(tl.cwd());
+            log.info("Changed files: " + changed_files.length);
+            if (changed_files.length == 0 && task_input.should_empty_changeset_fail) {
+                tl.setResult(tl.TaskResult.Failed, ` Polaris failing task because no changed files were found.`);
+                return;
+            } else if (changed_files.length == 0) {
+                log.info("Skipping polaris because no changed files were found.")
+                return;
+            }
+            const change_file = new ChangeSetEnvironment(log, process.env).get_or_create_file_path(tl.cwd());
+            new ChangeSetFileWriter(log).write_change_set_file(change_file, changed_files);
+            actual_build_command = new ChangeSetReplacement().replace_build_command(actual_build_command, change_file);
+        }
 
         log.debug("Running polaris.");
         var polaris_runner = new PolarisRunner(log);
-        var polaris_run_result = await polaris_runner.execute_cli(connection, polaris_install, tl.cwd(), task_input.build_command);
+        var polaris_run_result = await polaris_runner.execute_cli(connection, polaris_install, tl.cwd(), actual_build_command);
 
         log.debug("Executed polaris: " + polaris_run_result.return_code);
 
         if (task_input.should_wait_for_issues) {
             log.info("Checking for issues.")
             var polaris_waiter = new PolarisIssueWaiter(log);
-            await polaris_waiter.wait_for_issues(polaris_run_result.scan_cli_json_path, polaris_service);
+            var issue_count = await polaris_waiter.wait_for_issues(polaris_run_result.scan_cli_json_path, polaris_service);
+            if (issue_count != null && issue_count > 0) {
+                tl.setResult(tl.TaskResult.Failed, ` Polaris found ${issue_count} total issues.`);
+            }
         } else {
             log.info("Will not check for issues.")
         }

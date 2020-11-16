@@ -21,7 +21,6 @@ export default class PolarisInputReader {
             polaris_proxy_info = new PolarisProxyInfo(proxy_url, proxy_username, proxy_password);
         }
 
-
         const build_command = tl.getInput('polarisCommand', /* required: */ true)!;
         const should_wait_for_issues = tl.getBoolInput('waitForIssues', /* required: */ true)!;
 
@@ -29,10 +28,21 @@ export default class PolarisInputReader {
             polaris_url = polaris_url.slice(0, -1);
         }
 
+        var should_changeset_fail = false;
+        const should_changeset = tl.getBoolInput('populateChangeSetFile', /* required: */ true);
+        if (should_changeset) {
+            var should_changeset_fail_text = tl.getInput('whenChangeSetEmpty', /* required: */ true);
+            if (should_changeset_fail_text == "fail") {
+                should_changeset_fail = true;
+            }
+        }
+
         return { //PolarisTaskInputs
             polaris_connection: new PolarisConnection(polaris_url, polaris_token, polaris_proxy_info),
             build_command: build_command,
-            should_wait_for_issues: should_wait_for_issues
+            should_wait_for_issues: should_wait_for_issues,
+            should_empty_changeset_fail: should_changeset_fail,
+            should_populate_changeset: should_changeset
         }
     }
 }
