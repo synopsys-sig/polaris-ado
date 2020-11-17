@@ -8,7 +8,7 @@ export default class ChangeSetFileWriter {
     constructor(log: Logger) {
         this.log = log;
     }
-    write_change_set_file(file: string, paths: Array<string>) : Promise<number> { //must return something
+    async write_change_set_file(file: string, paths: Array<string>) : Promise<number> { //must return something
         return new Promise<number>((resolve, reject) => {
             var content = paths.join("\n");
             fs.writeFile(file, content, (err:any) => {
