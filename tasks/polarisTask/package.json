@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "description": "Polaris for Azure DevOps",
   "main": "index.js",
-  "scripts": {
-    "proxy": "tsc && node tasks/polarisTask/ProxyText.js",
-    "test": "tsc && mocha tasks/polarisTask/tests/_suite.js",
-    "build": "tsc && tfx extension create --manifest-globs vss-extension.json"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/synopsys-sig/polaris-ado.git"
@@ -30,6 +25,7 @@
     "@types/tunnel": "0.0.1",
     "adm-zip": "^0.4.14",
     "axios": "^0.19.2",
+    "azure-devops-node-api": "^10.1.2",
     "azure-pipelines-task-lib": "^2.9.3",
     "azure-pipelines-tool-lib": "^0.12.0",
     "fs-extra": "^8.1.0",
