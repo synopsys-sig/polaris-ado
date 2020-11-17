@@ -18,7 +18,7 @@ export default class ChangeSetEnvironment {
     }
 
     set_default_file_path(cwd: string) {
-        this.env["CHANGE_SET_FILE_PATH"] = cwd + "/.synopsys/polaris/changeSetFile.txt";
+        this.env["CHANGE_SET_FILE_PATH"] = cwd + "\\.synopsys\\polaris\\changeSetFile.txt";
     }
 
     get_file_path(): string {
