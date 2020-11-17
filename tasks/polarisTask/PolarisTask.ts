@@ -65,16 +65,11 @@ async function run() {
             log.debug("Unable to phone home.");
         }
 
-        log.debug("Installing polaris.");
-        var polaris_installer = PolarisInstaller.default_installer(log, polaris_service);
-        var polaris_install: PolarisInstall = await polaris_installer.install_or_locate_polaris(connection.url, polaris_install_path);
-        log.debug("Found polaris: " + polaris_install.polaris_executable);
-
+        //If there are no changes, we can potentially bail early, so we do that first.
         var actual_build_command = task_input.build_command;
         if (task_input.should_populate_changeset) {
             log.debug("Populating change set for polaris.");
             const changed_files = await new GitChangeSetCreator(log).generate_change_set(tl.cwd());
-            log.info("Changed files: " + changed_files.length);
             if (changed_files.length == 0 && task_input.should_empty_changeset_fail) {
                 tl.setResult(tl.TaskResult.Failed, ` Polaris failing task because no changed files were found.`);
                 return;
@@ -83,9 +78,14 @@ async function run() {
                 return;
             }
             const change_file = new ChangeSetEnvironment(log, process.env).get_or_create_file_path(tl.cwd());
-            new ChangeSetFileWriter(log).write_change_set_file(change_file, changed_files);
+            await new ChangeSetFileWriter(log).write_change_set_file(change_file, changed_files);
             actual_build_command = new ChangeSetReplacement().replace_build_command(actual_build_command, change_file);
         }
+
+        log.debug("Installing polaris.");
+        var polaris_installer = PolarisInstaller.default_installer(log, polaris_service);
+        var polaris_install: PolarisInstall = await polaris_installer.install_or_locate_polaris(connection.url, polaris_install_path);
+        log.debug("Found polaris: " + polaris_install.polaris_executable);
 
         log.debug("Running polaris.");
         var polaris_runner = new PolarisRunner(log);
