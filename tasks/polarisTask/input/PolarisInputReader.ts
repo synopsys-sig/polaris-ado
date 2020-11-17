@@ -1,8 +1,8 @@
 import { PolarisTaskInputs } from "../model/PolarisTaskInput";
-import {PolarisProxyInfo} from "../model/PolarisProxyInfo";
+import PolarisProxyInfo from "../model/PolarisProxyInfo";
 import tl = require("azure-pipelines-task-lib/task");
 import proxy from "proxy-agent";
-import {PolarisConnection} from "../model/PolarisConnection";
+import PolarisConnection from "../model/PolarisConnection";
 
 export default class PolarisInputReader {
     readInput(): PolarisTaskInputs {

@@ -1,4 +1,4 @@
-import {PolarisConnection} from "./PolarisConnection";
+import PolarisConnection from "./PolarisConnection";
 
 export interface PolarisTaskInputs {
     polaris_connection: PolarisConnection

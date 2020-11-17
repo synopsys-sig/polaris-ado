@@ -3,9 +3,9 @@ const winston = require("winston");
 import PhoneHomeService from "../service/PhoneHomeService"
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
-import {PolarisProxyInfo} from "../model/PolarisProxyInfo";
+import PolarisProxyInfo from "../model/PolarisProxyInfo";
 import PolarisService from "../service/PolarisService";
-import {PolarisConnection} from "../model/PolarisConnection";
+import PolarisConnection from "../model/PolarisConnection";
 var task = require("../task.json")
 
 //do something when app is closing

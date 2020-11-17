@@ -1,6 +1,6 @@
-import {PolarisProxyInfo} from "./PolarisProxyInfo";
+import PolarisProxyInfo from "./PolarisProxyInfo";
 
-export class PolarisConnection {
+export default class PolarisConnection {
     constructor(url: string, token: string, proxy: PolarisProxyInfo | undefined) {
         this.url = url;
         this.token = token;

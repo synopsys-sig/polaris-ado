@@ -1,7 +1,7 @@
 import PolarisExecutableFinder from "./PolarisExecutableFinder";
 import PolarisPlatformSupport from "../util/PolarisPlatformSupport";
 import PolarisService from "../service/PolarisService";
-import {PolarisInstall} from "../model/PolarisInstall";
+import PolarisInstall from "../model/PolarisInstall";
 
 const moment = require("moment");
 const fs = require('fs');

@@ -1,4 +1,4 @@
-class PolarisRunResult {
+export default class PolarisRunResult {
     return_code: Number;
     scan_cli_json_path: string;
     constructor(return_code:Number, scan_cli_json_path:string) {

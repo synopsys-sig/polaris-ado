@@ -9,7 +9,7 @@ const CancelToken = Axios.CancelToken;
 const fs = require('fs');
 const json_path = require('jsonpath');
 const debug = require('debug');
-import {PolarisConnection} from "../model/PolarisConnection";
+import PolarisConnection from "../model/PolarisConnection";
 
 export default class PolarisService {
     log: any;

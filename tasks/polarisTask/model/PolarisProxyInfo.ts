@@ -1,4 +1,4 @@
-export class PolarisProxyInfo {
+export default class PolarisProxyInfo {
     proxy_url: string;
     proxy_username: string | undefined;
     proxy_password: string| undefined;

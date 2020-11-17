@@ -1,11 +1,12 @@
+import PolarisRunResult from "../model/PolarisRunResult";
 const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
 const urlParser = require('url');
 import tl = require("azure-pipelines-task-lib/task");
 import tr = require("azure-pipelines-task-lib/toolrunner");
-import {PolarisInstall} from "../model/PolarisInstall";
-import {PolarisConnection} from "../model/PolarisConnection";
+import PolarisInstall from "../model/PolarisInstall";
+import PolarisConnection from "../model/PolarisConnection";
 
 export default class PolarisRunner {
     log: any;
