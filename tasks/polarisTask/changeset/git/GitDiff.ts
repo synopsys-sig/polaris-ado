@@ -23,10 +23,10 @@ export default class GitDiff {
             .filter(line => this.doesNotStartWithAny(line, "[command]", "rc:", "success:"))
 
         const existing_files = possible_files
-            .filter(file => tl.exist(file))
-            .map(file => path.resolve(cwd, file));
+            .map(file => path.resolve(cwd, file))
+            .filter(file => tl.exist(file));
 
-        this.log.info(`Found ${existing_files.length} changed files from git diff from ${possible_files.length} lines.`);
+        this.log.info(`Found ${existing_files.length} changed files from ${possible_files.length} git diff lines.`);
 
         return existing_files;
     }
