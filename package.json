@@ -7,7 +7,7 @@
     "proxy": "tsc && node tasks/polarisTask/tests/ProxyTest.js",
     "test": "tsc && mocha tasks/polarisTask/tests/_suite.js",
     "build": "tsc && tfx extension create --manifest-globs vss-extension.json",
-    "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json"
+    "tick": "tsc && tfx extension create --rev-version --manifest-globs vss-extension.json"
   },
   "repository": {
     "type": "git",
