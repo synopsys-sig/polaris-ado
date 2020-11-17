@@ -1,6 +1,7 @@
 import * as tl from "azure-pipelines-task-lib/task";
 import {PassThrough} from "stream";
 import {Logger} from "winston";
+import path from "path";
 
 export default class GitDiff {
     log: Logger;
@@ -18,15 +19,19 @@ export default class GitDiff {
         await tl.exec("git", ["diff", "--name-only", /*from*/ "HEAD", /* to */ commit, "."], { cwd, outStream, errStream: process.stderr});
 
         const possible_files = lines.map(line => line.trim())
-            .filter(line => !line.startsWith("[command]"))
-            .filter(line => !line.startsWith("rc:"))
-            .filter(line => !line.startsWith("success:"));
+            .filter(line => line.length > 0)
+            .filter(line => this.doesNotStartWithAny(line, "[command]", "rc:", "success:"))
 
         const existing_files = possible_files
-            .filter(file => tl.exist(file));
+            .filter(file => tl.exist(file))
+            .map(file => path.resolve(cwd, file));
 
         this.log.info(`Found ${existing_files.length} changed files from git diff from ${possible_files.length} lines.`);
 
         return existing_files;
+    }
+
+    private doesNotStartWithAny(item: string, ...targets:string[]): boolean {
+        return targets.filter(target => item.startsWith(target)).length == 0;
     }
 }
