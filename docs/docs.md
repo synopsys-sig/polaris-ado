@@ -81,4 +81,4 @@ If the CLI does attempt to install these tools, the default pipeline timeout wil
 
 Note that the extension sets POLARIS_FF_ENABLE_COVERITY_INCREMENTAL=true when generate change set is enabled.
 
-In the case where the set of changed files is empty, the task can be configured to either Succeed or Fail. 
+In the case where the set of changed files is empty, the task will not run the CLI and can be configured to either Succeed or Fail. 
