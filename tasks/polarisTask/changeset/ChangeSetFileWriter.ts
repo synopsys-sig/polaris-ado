@@ -1,6 +1,7 @@
 import {Logger} from "winston";
 
 var fs = require("fs");
+const fse = require('fs-extra');
 import tl = require("azure-pipelines-task-lib/task");
 
 export default class ChangeSetFileWriter {
@@ -9,6 +10,8 @@ export default class ChangeSetFileWriter {
         this.log = log;
     }
     async write_change_set_file(file: string, paths: Array<string>) : Promise<number> { //must return something
+        await fse.ensureFile(file);
+
         return new Promise<number>((resolve, reject) => {
             var content = paths.join("\n");
             fs.writeFile(file, content, (err:any) => {

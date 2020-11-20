@@ -71,13 +71,16 @@ async function run() {
             log.debug("Populating change set for polaris.");
             const changed_files = await new GitChangeSetCreator(log).generate_change_set(tl.cwd());
             if (changed_files.length == 0 && task_input.should_empty_changeset_fail) {
-                tl.setResult(tl.TaskResult.Failed, ` Polaris failing task because no changed files were found.`);
+                tl.setResult(tl.TaskResult.Failed, ` Task failed: No changed files were found.`);
                 return;
             } else if (changed_files.length == 0) {
-                log.info("Skipping polaris because no changed files were found.")
+                log.info("Task finished: No changed files were found.")
                 return;
             }
-            const change_file = new ChangeSetEnvironment(log, process.env).get_or_create_file_path(tl.cwd());
+            const change_set_environment = new ChangeSetEnvironment(log, process.env);
+            const change_file = change_set_environment.get_or_create_file_path(tl.cwd());
+            change_set_environment.set_enable_incremental();
+
             await new ChangeSetFileWriter(log).write_change_set_file(change_file, changed_files);
             actual_build_command = new ChangeSetReplacement().replace_build_command(actual_build_command, change_file);
         }

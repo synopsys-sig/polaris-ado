@@ -9,6 +9,10 @@ export default class ChangeSetEnvironment {
         this.env = env;
     }
 
+    set_enable_incremental() {
+        this.env["POLARIS_FF_ENABLE_COVERITY_INCREMENTAL"] = "true";
+    }
+
     is_file_path_present(): boolean {
         if ("CHANGE_SET_FILE_PATH" in this.env) {
             return true;
