@@ -47,7 +47,7 @@ export default class PolarisJobService {
         if (containsAny(status, ["FAILED"])) {
             var reason = json_path.query(job_response.data, "$.data.attributes.failureInfo.userFiendlyFailureReason");
             if (reason.length > 0) {
-                this.log.error("Check the job status in Polaris for more details.")
+                this.log.error("Check the job status in Polaris Software Integrity Platform for more details.")
                 throw new Error(JSON.stringify(reason));
             }
         }

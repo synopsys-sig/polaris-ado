@@ -1,22 +1,22 @@
 {
   "id": "62645f53-3f11-41b1-b439-b7197034d52c",
   "name": "SynopsysPolaris",
-  "friendlyName": "Synopsys Polaris",
-  "description": "The Azure Dev Ops plugin for Synopsys Polaris.",
+  "friendlyName": "Polaris Software Integrity Platform",
+  "description": "The Azure Dev Ops plugin for Polaris Software Integrity Platform.",
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Synopsys",
   "version": {
     "Major": 1,
     "Minor": 1,
-    "Patch": 7
+    "Patch": 13
   },
   "instanceNameFormat": "Synopsys Polaris $(buildCommand)",
   "inputs": [
     {
       "name": "polarisService",
       "type": "connectedService:polarisServer",
-      "label": "Polaris Service Endpoint",
+      "label": "Polaris Software Integrity Platform Service Endpoint",
       "defaultValue": "",
       "required": true,
       "helpMarkDown": "The Synopsys Polaris instance this task will run against."
@@ -24,7 +24,7 @@
     {
       "name": "polarisProxyService",
       "type": "connectedService:polarisServerProxy",
-      "label": "Polaris Proxy Service Endpoint",
+      "label": "Polaris Software Integrity Platform Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The proxy this task should use."
@@ -32,17 +32,17 @@
     {
       "name": "polarisCommand",
       "type": "string",
-      "label": "Polaris Command",
+      "label": "Polaris Software Integrity Platform Command",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The arguments to pass to the Polaris CLI."
+      "helpMarkDown": "The arguments to pass to the Polaris Software Integrity Platform CLI."
     },
     {
       "name": "waitForIssues",
       "type": "boolean",
       "label": "Check for issues",
       "defaultValue": false,
-      "helpMarkDown": "If enabled, this task wait for the polaris instance and fail the build if issues are detected."
+      "helpMarkDown": "If enabled, this task wait for the Polaris Software Integrity Platform instance and fail the build if issues are detected."
     },
     {
       "name": "populateChangeSetFile",

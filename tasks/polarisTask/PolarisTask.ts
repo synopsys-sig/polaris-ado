@@ -33,7 +33,7 @@ const log : Logger = winston.createLogger({
 
 async function run() {
     try {
-        log.info("Polaris task started.");
+        log.info("Polaris Software Integrity Platform task started.");
         const task_input: PolarisTaskInputs = new PolarisInputReader().readInput();
         const connection: PolarisConnection = task_input.polaris_connection;
         log.debug(`Read task configuration: ${connection.url} @ ${connection.token}`);
@@ -44,10 +44,10 @@ async function run() {
             log.warn("Agent did not have a tool directory, polaris will be installed to the current working directory.");
             polaris_install_path = tl.cwd();
         }
-        log.info(`Polaris will be installed to the following path: ` + polaris_install_path);
+        log.info(`Polaris Software Integrity Platform will be installed to the following path: ` + polaris_install_path);
 
 
-        log.info("Connecting to Polaris server.")
+        log.info("Connecting to Polaris Software Integrity Platform server.")
         const polaris_service = new PolarisService(log, connection);
         await polaris_service.authenticate();
         log.debug("Authenticated with polaris.");
@@ -68,7 +68,7 @@ async function run() {
         //If there are no changes, we can potentially bail early, so we do that first.
         var actual_build_command = task_input.build_command;
         if (task_input.should_populate_changeset) {
-            log.debug("Populating change set for polaris.");
+            log.debug("Populating change set for Polaris Software Integrity Platform.");
             const changed_files = await new GitChangeSetCreator(log).generate_change_set(tl.cwd());
             if (changed_files.length == 0 && task_input.should_empty_changeset_fail) {
                 tl.setResult(tl.TaskResult.Failed, ` Task failed: No changed files were found.`);
@@ -85,23 +85,23 @@ async function run() {
             actual_build_command = new ChangeSetReplacement().replace_build_command(actual_build_command, change_file);
         }
 
-        log.debug("Installing polaris.");
+        log.debug("Installing Polaris Software Integrity Platform.");
         var polaris_installer = PolarisInstaller.default_installer(log, polaris_service);
         var polaris_install: PolarisInstall = await polaris_installer.install_or_locate_polaris(connection.url, polaris_install_path);
-        log.debug("Found polaris: " + polaris_install.polaris_executable);
+        log.debug("Found Polaris Software Integrity Platform: " + polaris_install.polaris_executable);
 
-        log.debug("Running polaris.");
+        log.debug("Running Polaris Software Integrity Platform.");
         var polaris_runner = new PolarisRunner(log);
         var polaris_run_result = await polaris_runner.execute_cli(connection, polaris_install, tl.cwd(), actual_build_command);
 
-        log.debug("Executed polaris: " + polaris_run_result.return_code);
+        log.debug("Executed Polaris Software Integrity Platform: " + polaris_run_result.return_code);
 
         if (task_input.should_wait_for_issues) {
             log.info("Checking for issues.")
             var polaris_waiter = new PolarisIssueWaiter(log);
             var issue_count = await polaris_waiter.wait_for_issues(polaris_run_result.scan_cli_json_path, polaris_service);
             if (issue_count != null && issue_count > 0) {
-                tl.setResult(tl.TaskResult.Failed, ` Polaris found ${issue_count} total issues.`);
+                tl.setResult(tl.TaskResult.Failed, ` Polaris Software Integrity Platform found ${issue_count} total issues.`);
             }
         } else {
             log.info("Will not check for issues.")

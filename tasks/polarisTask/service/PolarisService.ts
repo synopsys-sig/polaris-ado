@@ -53,7 +53,7 @@ export default class PolarisService {
     }
 
     async authenticate() {
-        this.log.info("Authenticating with polaris.")
+        this.log.info("Authenticating with Polaris Software Integrity Platform.")
         debug.enable('https-proxy-agent');
         this.bearer_token = await this.fetch_bearer_token();
         debug.disable();
@@ -75,7 +75,7 @@ export default class PolarisService {
         //Basically we need to reject the promise ourselves 
         const resultPromise = new Promise<string>((resolve, reject) => {
             const timeout = 10000
-            setTimeout(() => { reject(new Error(`Failed to authenticate with polaris. This may be a problem with your polaris url, proxy setup or network.`))}, timeout);
+            setTimeout(() => { reject(new Error(`Failed to authenticate with Polaris Software Integrity Platform. This may be a problem with your url, proxy setup or network.`))}, timeout);
 
             var authenticateUrl = this.polaris_url + "/api/auth/authenticate";
     
@@ -85,17 +85,17 @@ export default class PolarisService {
                         this.log.info("Succesfully authenticated, saving bearer token.")
                         resolve(authResponse.data.jwt);
                     } else {
-                        this.log.error(`Failed to authenticate with polaris, no bearer token received.`)
-                        reject(new Error(`Failed to authenticate with polaris. Status: ${authResponse.status} Reason: ${authResponse.statusText}`))
+                        this.log.error(`Failed to authenticate with Polaris Software Integrity Platform, no bearer token received.`)
+                        reject(new Error(`Failed to authenticate with Polaris Software Integrity Platform. Status: ${authResponse.status} Reason: ${authResponse.statusText}`))
                     }
                 }).catch((e:any) => {
-                    this.log.error(`Unable to authenticate with polaris at url: ${authenticateUrl}`);
-                    this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
+                    this.log.error(`Unable to authenticate with Polaris Software Integrity Platform at url: ${authenticateUrl}`);
+                    this.log.error(`This may be a problem with your Polaris Software Integrity Platform url, proxy setup or network.`);
                     reject(e);
                 })
             } catch (e) {
-                this.log.error(`Unable to authenticate with polaris at url: ${authenticateUrl}`);
-                this.log.error(`This may be a problem with your polaris url, proxy setup or network.`);
+                this.log.error(`Unable to authenticate with Polaris Software Integrity Platform at url: ${authenticateUrl}`);
+                this.log.error(`This may be a problem with your Polaris Software Integrity Platform url, proxy setup or network.`);
                 reject(e);
             }
         })

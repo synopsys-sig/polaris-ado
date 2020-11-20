@@ -1,14 +1,14 @@
 # Introduction
 
-Polaris for Azure DevOps helps security and development teams analyze security risks in their software products. The plugin enables you to invoke the Polaris CLI from your Azure pipelines.
+Polaris Software Integrity Platform for Azure DevOps helps security and development teams analyze security risks in their software products. The plugin enables you to invoke the Polaris Software Integrity Platform CLI from your Azure pipelines.
 
-The plugin will download and install a Polaris CLI and execute it using the Polaris YAML file checked into source. The Polaris CLI will analyze your project and upload the results to Polaris. The plugin can then check for issues and fail the build if issues are found. 
+The plugin will download and install a Polaris Software Integrity Platform CLI and execute it using the Polaris Software Integrity Platform YAML file checked into source. The Polaris Software Integrity Platform CLI will analyze your project and upload the results to Polaris Software Integrity Platform. The plugin can then check for issues and fail the build if issues are found. 
 
 # Requirements 
 * Access to the internet
 * Azure DevOps Services or Azure DevOps Server 17 or greater (older versions may still work)
-* Polaris version 2020.03 or later, and a valid access token
-* Ensure that the Polaris CLI can run successfully on the project and that the polaris.yml file is checked into source.
+* Polaris Software Integrity Platform version 2020.03 or later, and a valid access token
+* Ensure that the Polaris Software Integrity Platform CLI can run successfully on the project and that the polaris.yml file is checked into source.
 
 # Installation
 An administrator must install the plugin from the Azure Marketplace. For information about installing and updating plugins refer to the [Microsoft documentation](https://docs.microsoft.com/en-us/azure/devops/marketplace/install-extension?view=azure-devops&tabs=browser).
@@ -17,9 +17,9 @@ An administrator must install the plugin from the Azure Marketplace. For informa
 
 The plugin can be added to an existing pipeline following the normal Azure processes. For information on adding a task see [Microsoft's documentation](https://docs.microsoft.com/en-us/azure/devops/extend/develop/add-build-task?view=azure-devops). 
 
-After adding the Polaris task, select or create a new Polaris Server Connection. Enter the polaris url and the access token. If a proxy is required enter the proxy url and credentials. 
+After adding the Polaris Software Integrity Platform task, select or create a new Polaris Software Integrity Platform Server Connection. Enter the Polaris Software Integrity Platform url and the access token. If a proxy is required enter the proxy url and credentials. 
 
-Enter the polaris build command such as "analyze". You do not need to wait (add "-w") even if you are checking for issues. 
+Enter the Polaris Software Integrity Platform build command such as "analyze". You do not need to wait (add "-w") even if you are checking for issues. 
 
 Select Wait for Issues if you would like the build to fail if issues are found. 
 
@@ -27,13 +27,13 @@ Note: To share service connections see the [Microsoft documentation](https://doc
 
 # Co Arguments
 
-Polaris supports --co arguments and the plugin supports passing these arguments to Polaris. However care must be taken to properly escape --co arguments in the plugin. 
+Polaris Software Integrity Platform supports --co arguments and the plugin supports passing these arguments to Polaris Software Integrity Platform. However care must be taken to properly escape --co arguments in the plugin. 
 
 The argument itself (but not --co) should be wrapped in quotes. `--co "argument=value"` 
 
 All quotes in the argument should be escaped with backslash quote and all backslashes should be escaped with double backslashes. `--co "argument=value \"with\" quotes and \\backslash\\ example"`
 
-The escaping of --co argument="value" approach should not be used - Azure separates arguments by quotes, so this creates a superfluous extra argument that Polaris does not understand. 
+The escaping of --co argument="value" approach should not be used - Azure separates arguments by quotes, so this creates a superfluous extra argument that Polaris Software Integrity Platform does not understand. 
 
 A full example co command might resemble:
 ```

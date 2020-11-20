@@ -17,7 +17,7 @@ export default class PolarisIssueWaiter {
 
         var issue_counts = json_path.query(scan_json, "$.issueSummary.total");
         if (issue_counts.length == 0) {
-            this.log.info("No issues found in scan json, will go to Polaris server.")
+            this.log.info("No issues found in scan json, will go to Polaris Software Integrity Platform server.")
 
             var job_status_urls = json_path.query(scan_json, "$.tools[*].jobStatusUrl");
             if (job_status_urls.length > 0) {
@@ -30,7 +30,7 @@ export default class PolarisIssueWaiter {
 
             var issue_api_url = json_path.query(scan_json, "$.scanInfo.issueApiUrl");
             if (issue_api_url.length > 0) {
-                this.log.info("Getting issues from Polaris server.")
+                this.log.info("Getting issues from Polaris Software Integrity Platform server.")
                 var issue_response =  await polaris_service.fetch_issue_data(issue_api_url[0]);
                 issue_counts = json_path.query(issue_response.data, "$.data..attributes.value");
             }
