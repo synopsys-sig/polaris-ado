@@ -10,4 +10,4 @@ As a Synopsys and Azure DevOps user, the Polaris Software Integrity Platform Ext
 3. If issues are found, the extension can fail the build
 
 
-Documentation - https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/693862444/Synopsys+Polaris+for+Azure+DevOps
+Documentation - https://synopsys.atlassian.net/wiki/spaces/INTDOCS/pages/693862444/Polaris+for+Azure+DevOps
