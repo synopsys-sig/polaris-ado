@@ -35,15 +35,13 @@ async function run() {
     try {
         log.info("Polaris task started.");
 
-        var polaris_url: string = "https://qa.dev.polaris.synopsys.com/"
-        const polaris_token: string = "52chjm6c3p0t32fdppst7rn8tjjtvb6us1e5pq5m7dslogqnlqn0"
+        var polaris_url: string = process.env["polaris.url"];
+        const polaris_token: string = process.env["polaris.access.token"];
 
-        var proxy_url: string = "http://qa-ssl-proxy01.dc1.lan:3128"//"http://bds:blackduck@qa-ssl-proxy01.dc1.lan:3129" //"http://int-proxy01.dc1.lan:3128/"; //
-        const proxy_username: string | undefined = undefined//"bds"
-        const proxy_password: string | undefined = undefined//"blackduck"
+        var proxy_url: string = process.env["proxy.url"];
+        const proxy_username: string | undefined = undefined
+        const proxy_password: string | undefined = undefined
         var polaris_proxy_info = new PolarisProxyInfo(proxy_url, proxy_username, proxy_password);
-
-        //process.env["HTTPS_PROXY"] = "http://int-proxy01.dc1.lan:3128/";
 
         const build_command = "analyze";
         const should_wait_for_issues = false;
@@ -69,9 +67,6 @@ async function run() {
         log.debug("Authenticated with polaris.");
 
         process.env["HTTPS_PROXY"] = proxy_url;
-        //delete process.env["HTTPS_PROXY"];
-        //var polaris_actions = new PolarisActions(log, tl);
-        //await polaris_actions.wait_for_issues("C:/Users/jordanp/Downloads/agent/_work/5/s/.synopsys/polaris/cli-scan.json", polaris_client);
 
         log.info("Task completed.")
     } catch (e) {
