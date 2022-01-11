@@ -1,6 +1,6 @@
 
 import * as os from 'os';
-const winston = require("winston");
+import winston from "winston";
 import PhoneHomeService from "./service/PhoneHomeService"
 import tl = require("azure-pipelines-task-lib/task");
 import PolarisInputReader from "./input/PolarisInputReader";
