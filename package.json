@@ -8,7 +8,6 @@
     "test": "tsc && mocha tasks/polarisTask/tests/_suite.js",
     "build": "tsc && tfx extension create --manifest-globs vss-extension.json",
     "tick": "tsc && node dev/tick.js && tfx extension create --manifest-globs vss-extension.json",
-    "installAll": "npm install && npm dedupe && npm prune && cd tasks/polarisTask && npm install && npm dedupe && npm prune"
   },
   "repository": {
     "type": "git",
