@@ -35,10 +35,10 @@ async function run() {
     try {
         log.info("Polaris task started.");
 
-        var polaris_url: string = process.env["polaris.url"];
-        const polaris_token: string = process.env["polaris.access.token"];
+        var polaris_url: string = <string>process.env["polaris.url"];
+        const polaris_token: string = <string>process.env["polaris.access.token"];
 
-        var proxy_url: string = process.env["proxy.url"];
+        var proxy_url: string = <string>process.env["proxy.url"];
         const proxy_username: string | undefined = undefined
         const proxy_password: string | undefined = undefined
         var polaris_proxy_info = new PolarisProxyInfo(proxy_url, proxy_username, proxy_password);
