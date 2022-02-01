@@ -37,7 +37,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
-    "@types/mocha": "^5.0.s0",
+    "@types/mocha": "^5.0.0",
     "mocha": "^5.0.0",
     "sync-request": "^6.1.0"
   }
