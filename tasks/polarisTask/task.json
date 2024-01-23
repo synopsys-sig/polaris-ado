@@ -1,30 +1,30 @@
 {
   "id": "62645f53-3f11-41b1-b439-b7197034d52c",
-  "name": "SynopsysPolaris",
-  "friendlyName": "Polaris Software Integrity Platform",
-  "description": "The Azure Dev Ops plugin for Polaris Software Integrity Platform.",
+  "name": "synopsysCoverityOnPolaris",
+  "friendlyName": "Coverity on Polaris",
+  "description": "The Azure Dev Ops plugin for Coverity on Polaris.",
   "helpMarkDown": "",
   "category": "Utility",
   "author": "Synopsys",
   "version": {
     "Major": 1,
     "Minor": 2,
-    "Patch": 4
+    "Patch": 5
   },
-  "instanceNameFormat": "Synopsys Polaris $(buildCommand)",
+  "instanceNameFormat": "Synopsys Coverity on Polaris $(buildCommand)",
   "inputs": [
     {
       "name": "polarisService",
       "type": "connectedService:polarisServer",
-      "label": "Polaris Software Integrity Platform Service Endpoint",
+      "label": "Coverity on Polaris Service Endpoint",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The Synopsys Polaris instance this task will run against."
+      "helpMarkDown": "The Synopsys Coverity on Polaris instance this task will run against."
     },
     {
       "name": "polarisProxyService",
       "type": "connectedService:polarisServerProxy",
-      "label": "Polaris Software Integrity Platform Proxy Service Endpoint",
+      "label": "Coverity on Polaris Proxy Service Endpoint",
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "The proxy this task should use."
@@ -32,17 +32,17 @@
     {
       "name": "polarisCommand",
       "type": "string",
-      "label": "Polaris Software Integrity Platform Command",
+      "label": "Coverity on Polaris Command",
       "defaultValue": "",
       "required": true,
-      "helpMarkDown": "The arguments to pass to the Polaris Software Integrity Platform CLI."
+      "helpMarkDown": "The arguments to pass to the Coverity on Polaris CLI."
     },
     {
       "name": "waitForIssues",
       "type": "boolean",
       "label": "Check for issues",
       "defaultValue": false,
-      "helpMarkDown": "If enabled, this task wait for the Polaris Software Integrity Platform instance and fail the build if issues are detected."
+      "helpMarkDown": "If enabled, this task wait for the Coverity on Polaris instance and fail the build if issues are detected."
     },
     {
       "name": "populateChangeSetFile",

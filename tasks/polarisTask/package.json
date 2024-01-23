@@ -1,7 +1,7 @@
 {
   "name": "polaris-ado",
   "version": "1.0.0",
-  "description": "Polaris for Azure DevOps",
+  "description": "Coverity on Polaris for Azure DevOps",
   "main": "index.js",
   "repository": {
     "type": "git",

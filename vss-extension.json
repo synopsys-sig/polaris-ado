@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-polaris",
-  "version": "1.2.4",
-  "name": "Synopsys Polaris",
+  "id": "synopsys-coverity-on-polaris",
+  "version": "1.2.5",
+  "name": "Synopsys Coverity on Polaris",
   "publisher": "synopsys-polaris",
   "public": true,
   "targets": [
@@ -17,12 +17,13 @@
     "Continuous Integration",
     "Security",
     "Open Source",
-    "Build"
+    "Build",
+    "Coverity on Polaris"
   ],
   "scopes": [
     "vso.build_execute"
   ],
-  "description": "Run Polaris for your build",
+  "description": "Run Coverity on Polaris for your build",
   "categories": [
     "Azure Pipelines"
   ],
