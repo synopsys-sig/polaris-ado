@@ -1,10 +1,10 @@
 {
   "manifestVersion": 1,
   "id": "synopsys-coverity-on-polaris",
-  "version": "1.2.6",
+  "version": "0.0.4",
   "name": "Synopsys Coverity on Polaris",
-  "publisher": "synopsys-polaris",
-  "public": true,
+  "publisher": "saraf",
+  "public": false,
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"
