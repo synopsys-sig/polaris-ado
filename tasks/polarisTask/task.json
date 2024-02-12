@@ -65,8 +65,9 @@
     }
   ],
   "execution": {
-    "Node": {
-      "target": "PolarisTask.js"
+    "Node16": {
+      "target": "PolarisTask.js",
+      "argumentFormat": ""
     }
   }
 }
