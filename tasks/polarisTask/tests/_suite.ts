@@ -12,7 +12,7 @@ describe('Sample task tests', function () {
 
     });
 
-    it('should succeed with simple inputs', function(done: MochaDone) {
+    it('should succeed with simple inputs', (done) => {
         this.timeout(1000);
 
         let tp = path.join(__dirname, 'success.js');
