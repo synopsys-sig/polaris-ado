@@ -8,8 +8,8 @@
   "author": "Synopsys",
   "version": {
     "Major": 1,
-    "Minor": 2,
-    "Patch": 6
+    "Minor": 3,
+    "Patch": 0
   },
   "instanceNameFormat": "Synopsys Coverity on Polaris $(buildCommand)",
   "inputs": [
@@ -65,8 +65,9 @@
     }
   ],
   "execution": {
-    "Node": {
-      "target": "PolarisTask.js"
+    "Node16": {
+      "target": "PolarisTask.js",
+      "argumentFormat": ""
     }
   }
 }

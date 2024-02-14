@@ -8,14 +8,14 @@ export default class PolarisInputReader {
     readInput(): PolarisTaskInputs {
         var polaris_service_id = "polarisService";
         var polaris_service = tl.getInput(polaris_service_id, /* required: */ true)!
-        var polaris_url: string = tl.getEndpointUrl(polaris_service, /* optional: */ false);
+        var polaris_url: string = tl.getEndpointUrl(polaris_service, /* optional: */ false) || '';
         const polaris_token: string = tl.getEndpointAuthorizationParameter(polaris_service, 'apiToken', /* optional: */ false)!
 
         var polaris_proxy_info: PolarisProxyInfo | undefined = undefined;
         var polaris_proxy_id = "polarisProxyService";
         var polaris_proxy_service = tl.getInput(polaris_proxy_id, /* required: */ false)
         if (polaris_proxy_service) {
-            var proxy_url: string = tl.getEndpointUrl(polaris_proxy_service, /* optional: */ true);
+            var proxy_url: string = tl.getEndpointUrl(polaris_proxy_service, /* optional: */ true) || '';
             const proxy_username: string | undefined = tl.getEndpointAuthorizationParameter(polaris_proxy_service, 'username', /* optional: */ true)
             const proxy_password: string | undefined = tl.getEndpointAuthorizationParameter(polaris_proxy_service, 'password', /* optional: */ true)
             polaris_proxy_info = new PolarisProxyInfo(proxy_url, proxy_username, proxy_password);
