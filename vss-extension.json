@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "id": "synopsys-coverity-on-polaris",
+  "id": "synopsys-polaris",
   "version": "1.3.0",
   "name": "Synopsys Coverity on Polaris",
   "publisher": "synopsys-polaris",
