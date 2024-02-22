@@ -19,7 +19,13 @@ Combined script to execute the build and create the .vsix file from your project
 cd tasks/polarisTask/ && sudo npm install && rm -rf node_modules && cd ../.. && sudo npm install && cp -r  node_modules/ tasks/polarisTask/node_modules && sudo npm run build
 ``` 
 
-The latest `.vsix` is generated using `node v20.11.0` and `npm v10.2.4`.  
+# Node
+
+The latest `.vsix` is generated using `node v20.11.0` and `npm v10.2.4`.
+
+# Azure Pipeline
+
+The plugin in supported with Azure Agent version `v2.206.1` and above.
 
 # Issue with the generated .vsix file
 13/02/2024
