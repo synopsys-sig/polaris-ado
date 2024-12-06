@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "synopsys-polaris",
   "version": "0.0.30",
-  "name": "Synopsys Coverity on Polaris",
+  "name": "[DEPRECATED] Synopsys Coverity on Polaris",
   "publisher": "saraf",
   "public": false,
   "targets": [
@@ -11,6 +11,7 @@
     }
   ],
   "tags": [
+    "Deprecated",
     "Polaris",
     "Synopsys",
     "Coverity",
@@ -28,7 +29,7 @@
     "Azure Pipelines"
   ],
   "icons": {
-    "default": "images/synopsys.png"
+    "default": "images/blackduck.png"
   },
   "branding": {
     "color": "#00639c",

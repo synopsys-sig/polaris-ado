@@ -33,6 +33,7 @@ const log : Logger = winston.createLogger({
 
 async function run() {
     try {
+        log.warn("This extension has been deprecated and will not work after February 14, 2025. It is recommended that you migrate to our new Black Duck Coverity on Polaris (https://marketplace.visualstudio.com/items?itemName=blackduck.blackduck-coverity-on-polaris). Instructions can be found at https://documentation.blackduck.com/bundle/ci-integrations/page/topics/t_ado-migrate.html");
         log.info("Polaris Software Integrity Platform task started.");
         const task_input: PolarisTaskInputs = new PolarisInputReader().readInput();
         const connection: PolarisConnection = task_input.polaris_connection;

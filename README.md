@@ -1,4 +1,6 @@
-# Coverity on Polaris for Azure DevOps.
+# [DEPRECATED] Coverity on Polaris for Azure DevOps.
+
+**NOTE:** This extension has been deprecated and will not work after February 14, 2025. It is recommended that you migrate to our new <a href="https://marketplace.visualstudio.com/items?itemName=blackduck.blackduck-coverity-on-polaris">Black Duck Coverity on Polaris</a>. Instructions can be found <a href="https://documentation.blackduck.com/bundle/ci-integrations/page/topics/t_ado-migrate.html">here</a>
 
 Polaris Extension for Azure DevOps Synopsys Coverity on Polaris helps security and development teams analyze security risks in their software products. The Coverity on Polaris Extension for Azure DevOps enables you to invoke Coverity on Polaris analysis from your Azure DevOps pipelines.
 
