@@ -12,4 +12,4 @@ As a Synopsys and Azure DevOps user, the Coverity on Polaris Extension for Azure
 3. If issues are found, the extension can fail the build
 
 
-Documentation - https://sig-product-docs.synopsys.com/bundle/ci-integrations/page/web_help_2.html
+Documentation - https://documentation.blackduck.com/bundle/ci-integrations/page/topics/c_pol-ado-overivew.html
