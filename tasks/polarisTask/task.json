@@ -1,7 +1,7 @@
 {
   "id": "62645f53-3f11-41b1-b439-b7197034d52c",
   "name": "SynopsysPolaris",
-  "friendlyName": "Coverity on Polaris",
+  "friendlyName": "[DEPRECATED] Coverity on Polaris",
   "description": "The Azure Dev Ops plugin for Coverity on Polaris.",
   "helpMarkDown": "",
   "category": "Utility",
@@ -11,7 +11,7 @@
     "Minor": 3,
     "Patch": 1
   },
-  "instanceNameFormat": "Synopsys Coverity on Polaris $(buildCommand)",
+  "instanceNameFormat": "[DEPRECATED] Synopsys Coverity on Polaris $(buildCommand)",
   "inputs": [
     {
       "name": "polarisService",

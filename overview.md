@@ -1,5 +1,7 @@
 ## Overview ##
 
+**NOTE:** This plugin has been deprecated and will not be maintained. It will not work after Coverity on Polaris 2024.12.0 release. It is recommended that you migrate to our new [Black Duck Coverity on Polaris Extension](https://marketplace.visualstudio.com/items?itemName=blackduck.blackduck-coverity-on-polaris). Details can be found [here](https://documentation.blackduck.com/bundle/ci-integrations/page/topics/c_pol-ado-rel-notes.html).
+
 Coverity on Polaris Extension for Azure DevOps helps security and development teams analyze security risks in their software products. The Coverity on Polaris Extension for Azure DevOps enables you to invoke Coverity on Polaris analysis from your Azure DevOps pipelines. 
 
 When the Coverity on Polaris for Azure DevOps runs, it automates Coverity on Polaris Scans in your Azure DevOps pipelines. 
